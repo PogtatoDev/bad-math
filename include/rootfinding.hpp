@@ -46,41 +46,41 @@ namespace RootFinding
 	}
 
 	template <typename Func>
-	real manual_bisection_method(Func f, real a, real b, real eps = 0.01)
+	real manual_bisection_method(Func f, real a, real b, real eps = 0.01, int term_cap = 5000)
 	{
 		if (f(a) * f(b) > 0)
 			return std::numeric_limits<real>::quiet_NaN();
 
 		real c = a;
-
+		int i = 0;
 		while ((b - a) >= eps)
 		{
+			if (i > term_cap)
+				break;
+
 			c = (a + b) / 2.0;
-			if (f(c) < eps)
+			if (General::abs(f(c)) < eps)
 				break;
 			if (f(c) * f(a) < 0)
 				b = c;
 			else
 				a = c;
+			i++;
 		}
 
 		return c;
 	}
 
 	template <typename Func>
-	real auto_bisection_method(Func f, real eps = 0.01)
+	real auto_bisection_method(Func f, real eps = 0.0001)
 	{
-		real a = 1;
-		real b = -1;
+		real a = 0;
+		real b = 0;
 		int i = 1;
 		while (f(a) * f(b) > 0)
 		{
-			a *= 2;
-			b *= 2;
-			i++;
-
-			if (i > 10000)
-				return std::numeric_limits<real>::quiet_NaN();
+			a--;
+			b++;
 		}
 		real c = a;
 

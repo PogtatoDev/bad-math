@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <bit>
+#include <cstdint>
 
 namespace General
 {
@@ -20,12 +21,12 @@ namespace General
 		return x * x * x;
 	}
 
-	unsigned long long int factorial(int n)
+	uint64_t factorial(int n)
 	{
 		if (n < 20)
 			return constants::FACTORIAL[n];
 
-		long long int prod = 1;
+		uint64_t prod = 1;
 		for (int k = 1; k <= n; k++)
 		{
 			prod *= k;
