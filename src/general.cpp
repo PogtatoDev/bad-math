@@ -138,4 +138,20 @@ namespace General
 		return v.d;
 	}
 	
+
+	real max(real x, real y)
+	{
+		if (x > y) 
+			return x;
+		else
+			return y;
+	}
+
+	real min(real x, real y)
+	{
+		if (x < y) 
+			return x;
+		else
+			return y;
+	}
 }; // namespace General

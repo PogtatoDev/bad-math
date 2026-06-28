@@ -8,6 +8,11 @@ namespace constants
 {
 	constexpr long double PI = 3.141592653589793238462643383L;
 	constexpr long double TAU = 2 * PI;
+	constexpr long double PI_2 = 3.141592653589793238462643383L / 2.0;
+	constexpr long double PI3_2 = 3 * 3.141592653589793238462643383L / 2.0;
+	constexpr long double PI_4 = PI_2 / 2.0;
+	constexpr long double PI4 = 2 * TAU;
+
 	constexpr long double E = 2.718281828459045235360287471L;
 	constexpr long double GAMMA = 0.577215664901532860606512090L;
 	constexpr long double OMEGA = 0.567143290409783872999968662L;

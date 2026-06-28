@@ -26,7 +26,7 @@ namespace InvTrig
 
 	real acos(real x)
 	{
-		return (constants::PI / 2.0) - asin(x);
+		return (constants::PI_2) - asin(x);
 	}
 
 	real atan(real x)
@@ -35,12 +35,12 @@ namespace InvTrig
     		return 0;
 
 		if (x == 1 || x == -1)
-			return x * constants::PI/4;
+			return x * constants::PI_4;
 
 		if (x > 1)
-			return constants::PI / 2 - atan(1.0 / x);
+			return constants::PI_2 - atan(1.0 / x);
 		if (x < -1)
-			return -constants::PI / 2 - atan(1.0 / x);
+			return -constants::PI_2 - atan(1.0 / x);
 
 		real term = x;
 		real sum = x;
@@ -75,11 +75,11 @@ namespace InvTrig
 	real fast_atan(real x)
 	{
 		if (x == 1 || x == -1)
-			return x * constants::PI/4;
+			return x * constants::PI_4;
 
 		const real a = 0.0776509570923569;
 		const real b = -0.287434475393028;
-		const real c = constants::PI/4 - a - b;
+		const real c = constants::PI_4 - a - b;
 
 		auto f = [a, b, c](real t)
 		{ 
@@ -90,9 +90,9 @@ namespace InvTrig
 		if (General::abs(x) < 1) 
 			return f(x);
 		if (x > 1)
-			return constants::PI/2 - f(1.0 / x);
+			return constants::PI_2 - f(1.0 / x);
 		if (x < -1)
-			return -constants::PI/2 - f(1.0 / x);
+			return -constants::PI_2 - f(1.0 / x);
 
 		return std::numeric_limits<real>::quiet_NaN();
 	}
@@ -103,10 +103,10 @@ namespace InvTrig
 			return std::numeric_limits<real>::quiet_NaN();
 
 		if (x == 1)
-			return constants::PI / 2;
+			return constants::PI_2;
 
 		if (x == -1)
-			return -constants::PI / 2;
+			return -constants::PI_2;
 		
 		return fast_atan(x / Roots::sqrt(1 - x*x));
 	}

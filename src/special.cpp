@@ -206,26 +206,11 @@ namespace Special
 		return result;
 	}
 
-	real max(real x, real y)
-	{
-		if (x > y) 
-			return x;
-		else
-			return y;
-	}
-
 	real smax(real x, real y, real bias)
 	{
 		return (x + y + Roots::sqrt(General::square(x-y) + bias)) / 2.0;
 	}
 
-	real min(real x, real y)
-	{
-		if (x < y) 
-			return x;
-		else
-			return y;
-	}
 
 	real smin(real x, real y, real bias)
 	{

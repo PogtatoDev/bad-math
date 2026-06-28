@@ -9,4 +9,6 @@ namespace Trig
     real sec(real x);
     real csc(real x);
     real cot(real x);
+    real alt_sin(real x);
+    real alt_cos(real x);
 }

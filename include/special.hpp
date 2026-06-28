@@ -18,8 +18,6 @@ namespace Special
 	real lamb_w(real x);
 	real atan2(real y, real x);
 	real nCr(real n, real r);
-	real max(real x, real y);
 	real smax(real x, real y, real bias);
-	real min(real x, real y);
 	real smin(real x, real y, real bias);
 }; // namespace Special

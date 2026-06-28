@@ -15,4 +15,6 @@ namespace General
     real log2_int(real x);
     real frexp(real x, int &e);
     real ldexp(real x, int e);
+    real max(real x, real y);
+    real min(real x, real y);
 }
