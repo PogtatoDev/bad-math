@@ -45,6 +45,12 @@ namespace Trig
 	{
 		return sin(constants::PI_2 - x);
 	}
+
+	real alt_cos(real x)
+	{
+		return alt_sin(constants::PI_2 - x);
+	}
+
 	real tan(real x)
 	{
 		return sin(x) / cos(x);
@@ -62,7 +68,4 @@ namespace Trig
 	{
 		return 1.0 / tan(x);
 	}
-
-
-	
 }; // namespace Trig
