@@ -71,14 +71,8 @@ namespace General
 
 	real exp2(int n)
 	{
-		union
-		{
-			uint64_t u;
-			double d;
-		} x;
-
-		x.u = uint64_t(n + 1023) << 52;
-		return x.d;
+		uint64_t bits = uint64_t(n + 1023) << 52;
+		return std::bit_cast<double>(bits);
 	}
 
 	real log2_int(real x)
@@ -86,4 +80,62 @@ namespace General
 		unsigned int n = std::round(x);
 		return std::bit_width(n) - 1;
 	}
+
+	real frexp(real x, int &e)
+	{
+		union
+		{
+			real d;
+			uint64_t u;
+		} v{x};
+
+		uint64_t bits = v.u;
+
+		uint64_t k = (bits >> 52) & 0x7FF;
+		if (k == 0)
+		{
+			e = 0;
+			return x;
+		}
+
+		bits &= ~(0x7FFULL << 52);
+		bits |= (1022ULL << 52);
+		v.u = bits;
+		e = (int)k - 1022;
+
+		return v.d;
+	}
+
+	real ldexp(real x, int e)
+	{
+		union
+		{
+			real d;
+			uint64_t u;
+		} v{ x };
+
+		uint64_t k = (v.u >> 52) & 0x7FF;
+
+		if (k == 0 || k == 0x7FF)
+			return x;
+
+		k += e;
+
+		if (k >= 0x7FF)
+		{
+			v.u |= (0x7FFULL << 52);
+			return v.d;
+		}
+
+		if ((int64_t)k <= 0)
+		{
+			return 0.0;
+		}
+
+		v.u &= ~(0x7FFULL << 52);
+		v.u |= k << 52;
+
+		return v.d;
+	}
+	
 }; // namespace General

@@ -13,4 +13,6 @@ namespace General
     real int_pow(real x, int n);
     real exp2(int n);
     real log2_int(real x);
+    real frexp(real x, int &e);
+    real ldexp(real x, int e);
 }

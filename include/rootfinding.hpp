@@ -91,6 +91,4 @@ namespace RootFinding
 
 		return c;
 	}
-
-	template <typename Func> real secant_method(Func f, real x0, real x1) {}
 }; // namespace RootFinding

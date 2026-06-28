@@ -3,6 +3,7 @@
 #include "../include/constants.hpp"
 #include "../include/rootfinding.hpp"
 #include "../include/trig.hpp"
+#include "../include/roots.hpp"
 #include <limits>
 
 
@@ -35,7 +36,7 @@ namespace InvTrig
 
 		if (x == 1 || x == -1)
 			return x * constants::PI/4;
-		
+
 		if (x > 1)
 			return constants::PI / 2 - atan(1.0 / x);
 		if (x < -1)
@@ -56,6 +57,19 @@ namespace InvTrig
 		}
 
 		return sum;
+	}
+
+	real asec(real x)
+	{
+		return acos(1.0 / x);
+	}
+	real acsc(real x)
+	{
+		return asin(1.0 / x);
+	}
+	real acot(real x)
+	{
+		return atan(1.0 / x);
 	}
 
 	real fast_atan(real x)
@@ -83,16 +97,17 @@ namespace InvTrig
 		return std::numeric_limits<real>::quiet_NaN();
 	}
 
-	real asec(real x)
+	real fast_asin(real x)
 	{
-		return acos(1.0 / x);
-	}
-	real acsc(real x)
-	{
-		return asin(1.0 / x);
-	}
-	real acot(real x)
-	{
-		return atan(1.0 / x);
+		if (General::abs(x) > 1)
+			return std::numeric_limits<real>::quiet_NaN();
+
+		if (x == 1)
+			return constants::PI / 2;
+
+		if (x == -1)
+			return -constants::PI / 2;
+		
+		return fast_atan(x / Roots::sqrt(1 - x*x));
 	}
 }; // namespace InvTrig

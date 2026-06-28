@@ -6,6 +6,7 @@
 #include "../include/general.hpp"
 #include "../include/rootfinding.hpp"
 #include "../include/logarithm.hpp"
+#include <cmath>
 
 namespace Roots
 {
@@ -17,9 +18,21 @@ namespace Roots
 			return std::numeric_limits<real>::quiet_NaN();
 		if (x == 0)
 			return 0;
-		auto f = [x](real t) { return General::square(t) - x; };
-		auto Df = [](real t) { return 2 * t; };
-		return RootFinding::manual_newton(f, Df, x / 2.0);
+
+		int k;
+		real m = General::frexp(x, k);
+
+		m *= 1 + (k & 1);
+		k -= (k & 1);
+
+		real y = 0.41731 + 0.59016 * m;
+		real my = m / y;
+
+		y = 0.5 * (y + my);
+    	y = 0.5 * (y + my);
+    	y = 0.5 * (y + my);
+
+		return General::ldexp(m, k/2);
 	}
 
 	real bisection_sqrt(real x, real acc = 0.01)

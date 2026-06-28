@@ -9,6 +9,7 @@ namespace InvTrig
 	real acos(real x);
 	real atan(real x);
 	real fast_atan(real x);
+	real fast_asin(real x);
 	real asec(real x);
 	real acsc(real x);
 	real acot(real x);
