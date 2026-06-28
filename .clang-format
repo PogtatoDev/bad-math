@@ -1,0 +1,19 @@
+Language: Cpp
+
+TabWidth: 8
+IndentWidth: 8
+UseTab: Always
+
+
+BreakBeforeBraces: Allman
+NamespaceIndentation: All
+
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortBlocksOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+
+PointerAlignment: Right
+ReferenceAlignment: Pointer
+
+SortIncludes: true
