@@ -6,7 +6,6 @@
 #include "../include/general.hpp"
 #include "../include/rootfinding.hpp"
 #include "../include/logarithm.hpp"
-#include <cmath>
 
 namespace Roots
 {
