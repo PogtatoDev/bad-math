@@ -25,11 +25,10 @@ namespace Roots
 		k -= (k & 1);
 
 		real y = 0.41731 + 0.59016 * m;
-		real my = m / y;
 
-		y = 0.5 * (y + my);
-    	y = 0.5 * (y + my);
-    	y = 0.5 * (y + my);
+		y = 0.5 * (y + m/y);
+    	y = 0.5 * (y + m/y);
+		y = 0.5 * (y + m/y);
 
 		return General::ldexp(m, k/2);
 	}

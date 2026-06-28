@@ -28,8 +28,6 @@ namespace Calculus
 	template <typename Func>
 	real infinite_sum(Func f, real start, bool alternating = false)
 	{
-		
-
 		if (alternating)
 		{
 			real sum = 0;
@@ -78,14 +76,12 @@ namespace Calculus
 	}
 
 	template <typename Func>
-	real simpson_integral(Func f, real start, real end)
+	real simpson_integral(Func f, real start, real end, int n)
 	{
 		if (start == end)
 			return 0.0;
 		if (start > end)
 			return -simpson_integral(f, end, start);
-
-		int n = 50 * ((General::abs(start) + 1) * end);
 		if (n % 2 != 0)
 			n += 1;
 		real h = (end - start) / n;
