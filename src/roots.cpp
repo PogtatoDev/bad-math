@@ -33,14 +33,14 @@ namespace Roots
 		return General::ldexp(y, k/2);
 	}
 
-	real bisection_sqrt(real x, real acc = 0.01)
+	real bisection_sqrt(real x, real eps = 0.01)
 	{
 		int k;
 		real m = General::frexp(x, k);
 		m *= 1 + (k & 1);
 		k -= (k & 1);
 		auto f = [m](real t) { return General::square(t) - m; };
-		real y = RootFinding::manual_bisection_method(f, 0.7, 2, 0.0000000001);
+		real y = RootFinding::manual_bisection_method(f, 0.5, 2, eps);
 
 		return General::ldexp(y, k/2);
 	}

@@ -109,12 +109,8 @@ namespace Special
 			if (General::is_int(x) && x < 20)
 			{
 				int n = static_cast<int>(std::round(x));
-				real result = 1.0L;
-				for (int i = 1; i < n; i++)
-				{
-					result *= i;
-				}
-				return l::log(result);
+				
+				return l::log(General::factorial(n-1));
 			}
 
 			real c = 0.5 * (constants::LOG2 + constants::LOGPI);
