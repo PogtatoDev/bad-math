@@ -21,7 +21,8 @@ namespace constants
 	constexpr long double LOG2 = 0.693147180559945309417232121L;
 	constexpr long double LOG10 = 2.302585092994045684017991454L;
 	constexpr long double SQRT2 = 1.414213562373095048801688724L;
-	constexpr long double LOGPI = 1.144729885849400174143427351L;
+	constexpr long double LOGPI =  1.144729885849400174143427351L;
+	constexpr long double INV_LOG2 = 1.442695040888963407359924681L;
 	constexpr int DEF_TAYLOR_ACC = 30;
 	constexpr int DEF_NEWTON_ACC = 100;
 	constexpr cmplx i = cmplx(0.0, 1.0);

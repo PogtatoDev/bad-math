@@ -3,16 +3,21 @@
 #include "../include/rootfinding.hpp"
 #include "../include/constants.hpp"
 #include "../include/expo.hpp"
+#include "../include/lookup/log_table.hpp"
 
 
 namespace Logarithm
 {
-	real log(real x)
+	real log(real x, real eps)
 	{
-		real eps = 0.001;
-
-		if (x <= 0)
+		if (x < 0)
 			return std::numeric_limits<real>::quiet_NaN();
+		if (General::is_int(x) && x < 511)
+		{
+			int n = static_cast<int>(x);
+			return log_table[n];
+		}
+			
 		int k;
 		real m = frexp(x, &k);
 
@@ -35,8 +40,14 @@ namespace Logarithm
 
 	real alt_log(real x)
 	{
-		if (x <= 0)
+		if (x < 0)
 			return std::numeric_limits<real>::quiet_NaN();
+
+		if (General::is_int(x) && x < 511)
+		{
+			int n = static_cast<int>(x);
+			return log_table[n];
+		}
 		int k;
 		real m = frexp(x, &k);
 
@@ -59,7 +70,7 @@ namespace Logarithm
 
 	real bisection_log(real x, real bisection_acc = 0.01)
 	{
-		if (x <= 0)
+		if (x < 0)
 			return std::numeric_limits<real>::quiet_NaN();
 		auto f = [x](real t) { return Expo::exp(t) - x; };
 
@@ -83,7 +94,7 @@ namespace Logarithm
 
 	real log_base(real x, real base)
 	{
-		return log(x) / log(base);
+		return Logarithm::log(x) / log(base);
 	}
 	real log10(real x)
 	{

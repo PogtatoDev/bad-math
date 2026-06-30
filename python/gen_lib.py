@@ -1,8 +1,8 @@
 import os
 
-os.remove("include/full_lib.hpp")
-headers = os.listdir("./include/")
-lib = open("./include/full_lib.hpp", "w")
+os.remove("../include/full_lib.hpp")
+headers = os.listdir("../include/")
+lib = open("../include/full_lib.hpp", "w")
 lib.write("#pragma once\n")
 
 for header in headers:
