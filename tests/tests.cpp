@@ -38,7 +38,7 @@ class Timer
 };
 
 template <typename Func1, typename Func2> 
-benchmark bench(Func1 func1, Func2 func2, float start, float end, float increment, bool random)
+benchmark bench(Func1 func1, Func2 func2, float start, float end, float increment)
 {
     real sink = 0;
     Timer t;
@@ -76,9 +76,9 @@ benchmark bench(Func1 func1, Func2 func2, float start, float end, float incremen
 
 int main()
 {
-    auto f1 = [](real t) { return Special::log_gamma(t); };
-    auto f2 = [](real t) { return std::lgamma(t); };
-    benchmark tests = bench(f1, f2, 1, 100000, 1, false);
+    auto f1 = [](float t) { return Trig::sin(t); };
+    auto f2 = [](float t) { return std::sin(t); };
+    benchmark tests = bench(f1, f2, -10000000, 10000000, 1);
 
     std::cout
     << "full time taken:     " << tests.full_time  << std::endl

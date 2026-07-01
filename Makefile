@@ -5,7 +5,7 @@ SRC_DIR  := src
 OBJ_DIR  := obj
 BIN_DIR  := tests
 
-TARGET   := $(BIN_DIR)/tests
+TARGET   := $(BIN_DIR)/tests.out
 
 SRCS     := $(wildcard $(SRC_DIR)/*.cpp)
 OBJS     := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRCS))
@@ -18,9 +18,12 @@ $(TARGET): $(OBJS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c $< $(BIN_DIR)/tests.cpp -o $@ 
+	$(CXX) $(CXXFLAGS) -c $< -o $@ 
 
 clean:
 	rm -rf $(OBJ_DIR) $(TARGET)
+
+clean_bin:
+	rm -rf $(TARGET)
 
 .PHONY: all clean

@@ -79,8 +79,12 @@ namespace RootFinding
 		int i = 1;
 		while (f(a) * f(b) > 0)
 		{
-			a--;
-			b++;
+			a *= 2;
+			b *= 2;
+
+			i++;
+			if (i < 10000)
+				return std::numeric_limits<real>::quiet_NaN();
 		}
 		real c = a;
 

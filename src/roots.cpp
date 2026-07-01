@@ -78,7 +78,7 @@ namespace Roots
 		auto f = [x, n](real t) { return General::int_pow(t, n) - x; };
 		auto Df = [n](real t)
 		{ return n * General::int_pow(t, n - 1); };
-		return RootFinding::manual_newton(f, Df, x / n);
+		return RootFinding::manual_newton(f, Df, guess);
 	}
 
 	real bisection_nth_root(real x, int n, real acc = 0.01)

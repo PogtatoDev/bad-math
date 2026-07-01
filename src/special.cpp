@@ -48,13 +48,11 @@ namespace Special
 			return Calculus::infinite_sum(f, 1);
 		}
 
-		real int_eta(int s, int acc = 1000)
+		real int_eta(int s)
 		{
 			if (s == 1)
 				return constants::LOG2;
 
-			real approx = 0;
-			real term = 0;
 			auto f = [s](real t)
 			{ return 1.0 / General::int_pow(t, s); };
 
@@ -80,13 +78,11 @@ namespace Special
 			return Calculus::infinite_sum(f, 1, false);
 		}
 
-		real real_eta(int s, int acc = 1000)
+		real real_eta(int s)
 		{
 			if (s == 1)
 				return constants::LOG2;
 
-			real approx = 0;
-			real term = 0;
 			auto f = [s](real t)
 			{ return 1.0 / General::int_pow(t, s); };
 
