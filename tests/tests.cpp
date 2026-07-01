@@ -1,15 +1,14 @@
-#include "include/constants.hpp"
-#include "include/general.hpp"
-#include "include/logarithm.hpp"
-#include "include/powers.hpp"
-#include "include/roots.hpp"
-#include "include/special.hpp"
-#include "include/trig.hpp"
+#include "../include/constants.hpp"
+#include "../include/general.hpp"
+#include "../include/logarithm.hpp"
+#include "../include/powers.hpp"
+#include "../include/roots.hpp"
+#include "../include/special.hpp"
+#include "../include/trig.hpp"
 #include <chrono>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
-
 struct benchmark
 {
     real full_time;
@@ -43,20 +42,10 @@ benchmark bench(Func1 func1, Func2 func2, float start, float end, float incremen
 {
     real sink = 0;
     Timer t;
-    if (random)
+
+    for (float i = start; i < end; i += increment)
     {
-        for (float i = start; i < end; i += increment)
-        {
-            real r = rand();
-            sink += General::abs(func1(r) - func2(r));
-        }
-    }
-    else 
-    {
-        for (float i = start; i < end; i += increment)
-        {
-            sink += General::abs(func1(i) - func2(i));
-        }
+        sink += General::abs(func1(i) - func2(i));
     }
 
     benchmark temp;
@@ -87,14 +76,15 @@ benchmark bench(Func1 func1, Func2 func2, float start, float end, float incremen
 
 int main()
 {
-    auto f1 = [](real t) { return std::pow(t, 1/8); };
-    auto f2 = [](real t) { return Powers::rational_pow(t, 1, 8); };
-    benchmark tests = bench(f1, f2, 1, 1000, 0.1, false);
+    auto f1 = [](real t) { return Special::log_gamma(t); };
+    auto f2 = [](real t) { return std::lgamma(t); };
+    benchmark tests = bench(f1, f2, 1, 100000, 1, false);
 
-    std::cout << "full time taken:     " << tests.full_time  << std::endl;
-    std::cout << "full error:          " << tests.sink       << std::endl;
-    std::cout << "func 1 time taken:   " << tests.func1_time << std::endl;
-    std::cout << "func 2 time taken:   " << tests.func2_time << std::endl;
-    std::cout << "func 1 sink:         " << tests.func1_sink << std::endl;
-    std::cout << "func 2 sink:         " << tests.func2_sink << std::endl;
+    std::cout
+    << "full time taken:     " << tests.full_time  << std::endl
+    << "full error:          " << tests.sink       << std::endl
+    << "func 1 time taken:   " << tests.func1_time << std::endl
+    << "func 2 time taken:   " << tests.func2_time << std::endl
+    << "func 1 sink:         " << tests.func1_sink << std::endl
+    << "func 2 sink:         " << tests.func2_sink << std::endl;
 }

@@ -22,7 +22,7 @@ namespace Logarithm
 		real m = frexp(x, &k);
 
 		real y = m - 1;
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			real exp_y = Expo::exp(y);
 			real r = m / exp_y;

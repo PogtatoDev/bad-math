@@ -14,7 +14,7 @@ namespace Expo
 	{
 		if (x < -710) return 0;
 		if (x > 710) return std::numeric_limits<real>::infinity();
-		if (x != x) return x;
+		if (std::isnan(x)) return x;
 
 		if (General::is_int(x) && x < 1420) 
 		{
@@ -68,7 +68,7 @@ namespace Expo
 					0.0000248015873015873,
 					2.75573192239859e-6,
 					2.75573192239859e-7,
-					2.50521083854417e-8,};
+					2.50521083854417e-8};
 
 		if (x < 0) 
 			return 1.0 / exp(-x);
