@@ -4,8 +4,10 @@
 #include "../include/constants.hpp"
 #include "../include/expo.hpp"
 #include "../include/general.hpp"
-#include "../include/rootfinding.hpp"
 #include "../include/logarithm.hpp"
+#include "../include/lookup/sqrt_table.hpp"
+#include "../include/rootfinding.hpp"
+
 
 namespace Roots
 {
@@ -18,6 +20,12 @@ namespace Roots
 		if (x == 0)
 			return 0;
 
+		if (General::is_int(x) && x < 2048)
+		{
+			int n = static_cast<int>(x);
+			return sqrt_table[n];
+		}
+
 		int k;
 		real m = General::frexp(x, k);
 
@@ -26,15 +34,25 @@ namespace Roots
 
 		real y = 0.41731 + 0.59016 * m;
 
-		y = 0.5 * (y + m/y);
-    	y = 0.5 * (y + m/y);
-		y = 0.5 * (y + m/y);
+		y = 0.5 * (y + m / y);
+		y = 0.5 * (y + m / y);
+		y = 0.5 * (y + m / y);
 
-		return General::ldexp(y, k/2);
+		return General::ldexp(y, k / 2);
 	}
 
 	real bisection_sqrt(real x, real eps = 0.01)
 	{
+		if (x < 0)
+			return std::numeric_limits<real>::quiet_NaN();
+		if (x == 0)
+			return 0;
+
+		if (General::is_int(x) && x < 2048)
+		{
+			int n = static_cast<int>(x);
+			return sqrt_table[n];
+		}
 		int k;
 		real m = General::frexp(x, k);
 		m *= 1 + (k & 1);
@@ -42,7 +60,7 @@ namespace Roots
 		auto f = [m](real t) { return General::square(t) - m; };
 		real y = RootFinding::manual_bisection_method(f, 0.5, 2, eps);
 
-		return General::ldexp(y, k/2);
+		return General::ldexp(y, k / 2);
 	}
 
 	real log_root(real x, int n)

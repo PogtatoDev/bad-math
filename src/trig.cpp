@@ -30,7 +30,7 @@ namespace Trig
 
 	real sin(real x)
 	{
-		x = std::fmod(x, 2 * constants::PI);
+		x = std::fmod(x, constants::TAU);
 		x = General::min(x, constants::PI - x);
 		x = General::max(x, -constants::PI - x);
 		x = General::min(x, constants::PI - x);

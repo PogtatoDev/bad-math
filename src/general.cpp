@@ -21,12 +21,12 @@ namespace General
 		return x * x * x;
 	}
 
-	uint64_t factorial(int n)
+	real factorial(int n)
 	{
 		if (n < 20)
 			return constants::FACTORIAL[n];
 
-		uint64_t prod = 1;
+		real prod = 1;
 		for (int k = 1; k <= n; k++)
 		{
 			prod *= k;

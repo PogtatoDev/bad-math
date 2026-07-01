@@ -5,6 +5,8 @@
 #include "../include/lookup/exp_table.hpp"
 #include <cmath>
 #include <limits>
+#include <bit>
+#include <cstdint>
 
 namespace Expo
 {
@@ -14,7 +16,7 @@ namespace Expo
 		if (x > 710) return std::numeric_limits<real>::infinity();
 		if (x != x) return x;
 
-		if (General::is_int(x)) 
+		if (General::is_int(x) && x < 1420) 
 		{
 			int n = static_cast<int>(x);
 			return exp_table[n + 710];
@@ -39,7 +41,7 @@ namespace Expo
 				break;
 		}
 
-		return sum * General::exp2(k);
+		return General::ldexp(sum, k);
 	}
 
 	// TOOO: fix this bullshit
@@ -49,7 +51,7 @@ namespace Expo
 		if (x > 710) return std::numeric_limits<real>::infinity();
 		if (x != x) return x;
 
-		if (General::is_int(x)) 
+		if (General::is_int(x) && x < 1420) 
 		{
 			int n = static_cast<int>(x);
 			return exp_table[n + 710];
@@ -88,7 +90,22 @@ namespace Expo
         coeff[10]
         )))))))))));
 
-		return General::exp2(n) * p;
+		return General::ldexp(p, n);
+	}
+
+	real fast_exp(real x)
+	{
+		if (General::is_int(x) && x < 1420)
+		{
+			int n = static_cast<int>(x);
+			return exp_table[720 + n];
+		}
+
+		constexpr double a = (1LL << 52) / 0.6931471805599453;
+		constexpr double b = (1LL << 52) * (1023 - 0.04367744890362246);
+		x = a * x + b;
+
+		return std::bit_cast<double>(static_cast<uint64_t>(x));
 	}
 
     real exp10(real x)
@@ -99,11 +116,5 @@ namespace Expo
 	real exp2(real x)
 	{
 		return exp(x * constants::LOG2);
-	}
-
-	real fast_exp(real x)
-	{
-		real c[4] = {0.28033708,0.425302,1.01273643,1.00020947};
-
 	}
 }; // namespace Expo

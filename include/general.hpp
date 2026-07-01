@@ -1,12 +1,13 @@
 #pragma once
 #include "constants.hpp"
 
+
 namespace General
 {   
     real identity(real x);
     real square(real x);
     real cube(real x);
-    unsigned long long factorial(int n);
+    real factorial(int n);
     real abs(real x);
     bool is_even(int x);
     bool is_int(real x);
