@@ -22,9 +22,11 @@ namespace Special
 			return 1;
 		if (n == 2)
 			return 1.5;
+		real n2 = n * n;
+		real n4 = n2 * n2;
 		return l::log(n) + constants::GAMMA +
-		       1.0 / (2.0 * n) - 1.0 / (12.0 * g::square(n)) +
-		       1.0 / (120.0 * g::square(g::square(n)));
+		       1.0 / (2.0 * n) - 1.0 / (12.0 * n2) +
+		       1.0 / (120.0 * n4);
 	}
 
 	namespace DirichletSeries
@@ -32,11 +34,11 @@ namespace Special
 		real int_zeta(int s)
 		{
 			if (s == 2)
-				return g::square(constants::PI) / 6.0;
+				return constants::PI_SQ / 6.0;
 			if (s == 3)
 				return constants::ZETA3;
 			if (s == 4)
-				return g::square(g::square(constants::PI)) /
+				return constants::PI_SQ * constants::PI_SQ /
 				       90.0;
 
 			if (s < 1)
@@ -62,11 +64,11 @@ namespace Special
 		real real_zeta(real s)
 		{
 			if (s == 2)
-				return g::square(constants::PI) / 6.0;
+				return constants::PI_SQ / 6.0;
 			if (s == 3)
 				return constants::ZETA3;
 			if (s == 4)
-				return g::square(g::square(constants::PI)) /
+				return constants::PI_SQ * constants::PI_SQ /
 				       90.0;
 
 			if (s < 1)
@@ -200,12 +202,14 @@ namespace Special
 
 	real smax(real x, real y, real bias)
 	{
-		return (x + y + Roots::sqrt(General::square(x-y) + bias)) / 2.0;
+		real xy = x - y;
+		return (x + y + Roots::sqrt(xy * xy + bias)) / 2.0;
 	}
 
 
 	real smin(real x, real y, real bias)
 	{
-		return (x + y - Roots::sqrt(General::square(x-y) + bias)) / 2.0;
+		real xy = x - y;
+		return (x + y - Roots::sqrt(xy * xy + bias)) / 2.0;
 	}
 }; // namespace Special

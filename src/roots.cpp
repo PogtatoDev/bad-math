@@ -57,7 +57,7 @@ namespace Roots
 		real m = General::frexp(x, k);
 		m *= 1 + (k & 1);
 		k -= (k & 1);
-		auto f = [m](real t) { return General::square(t) - m; };
+		auto f = [m](real t) { return (t * t) - m; };
 		real y = RootFinding::manual_bisection_method(f, 0.5, 2, eps);
 
 		return General::ldexp(y, k / 2);

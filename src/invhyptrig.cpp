@@ -9,11 +9,11 @@ namespace InvHypTrig
 {
 	real asinh(real x)
 	{
-		return Logarithm::log(x + Roots::sqrt(General::square(x) + 1));
+		return Logarithm::log(x + Roots::sqrt(x * x + 1));
 	}
 	real acosh(real x)
 	{
-		return Logarithm::log(x + Roots::sqrt(General::square(x) - 1));
+		return Logarithm::log(x + Roots::sqrt(x * x - 1));
 	}
 
 	real atanh(real x)

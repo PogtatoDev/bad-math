@@ -83,7 +83,7 @@ namespace InvTrig
 
 		auto f = [a, b, c](real t)
 		{ 
-			real t2 = General::square(t);
+			real t2 = t * t;
 			return ((a*t2 + b)*t2 + c)*t;
 		};
 

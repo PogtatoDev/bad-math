@@ -1,13 +1,13 @@
-#include "../include/complexmath.hpp"
-
-#include "../include/constants.hpp"
-#include "../include/expo.hpp"
-#include "../include/special.hpp"
-#include "../include/trig.hpp"
-#include "../include/logarithm.hpp"
-#include "../include/general.hpp"
-#include "../include/roots.hpp"
-#include <limits>
+#include "../include/complexmath.hpp" 
+ 
+#include "../include/constants.hpp" 
+#include "../include/expo.hpp" 
+#include "../include/special.hpp" 
+#include "../include/trig.hpp" 
+#include "../include/logarithm.hpp" 
+#include "../include/general.hpp" 
+#include "../include/roots.hpp" 
+#include <limits> 
 
 namespace ComplexMath
 {
@@ -37,20 +37,17 @@ namespace ComplexMath
 
 	cmplx complex_sqrt(real x)
 	{
-		cmplx result = 1;
 		if (x < 0)
-			result *= cmplx(0, Roots::sqrt(-x));
+			return cmplx(0, Roots::sqrt(-x));
 		else
-			result *= Roots::sqrt(x);
-
-		return result;
+			return Roots::sqrt(x);
 	}
 
 	std::vector<cmplx> solve_quadratic(real a, real b, real c)
 	{
 		if (a == 0)
 			return {cmplx(std::numeric_limits<real>::quiet_NaN(), 0)};
-		real discriminant = g::square(b) - 4 * a * c;
+		real discriminant = (b * b) - 4 * a * c;
 		std::vector<cmplx> roots = {
 		    (-cmplx(b, 0.0L) + complex_sqrt(discriminant)) /
 			cmplx((2.0 * a), 0.0L),
@@ -62,7 +59,7 @@ namespace ComplexMath
 	cmplx complex_square(cmplx z)
 	{
 		real a = z.real(), b = z.imag();
-		return cmplx(g::square(a) - g::square(b), 2 * a * b);
+		return cmplx(a*a - b*b, 2 * a * b);
 	}
 
 	cmplx complex_sin(cmplx z)

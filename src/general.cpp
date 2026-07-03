@@ -65,9 +65,9 @@ namespace General
 		else if (n < 0)
 			return 1.0 / int_pow(x, -n);
 		else if (is_even(n))
-			return int_pow(square(x), n / 2);
+			return int_pow(x*x, n / 2);
 		else
-			return x * int_pow(square(x), (n - 1) / 2);
+			return x * int_pow(x*x, (n - 1) / 2);
 	}
 
 	real exp2(int n)
