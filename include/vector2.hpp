@@ -1,7 +1,14 @@
 #pragma once
 #include "constants.hpp"
 
-struct vector2
+template<typename T>
+struct Vector2
 {
-    real x, y;
+    T x, y;
+    Vector2(T ix, T iy)
+    {
+        x = ix;
+        y = iy;
+    }
+    
 };

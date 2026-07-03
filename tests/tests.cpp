@@ -81,21 +81,32 @@ template <typename Func1, typename Func2> void test(Func1 f1, Func2 f2)
     << "func 2 sink:         " << tests.func2_sink << std::endl;
 }
 
+void test_quadratic()
+{
+    Timer t;
+    Quadratic quad1(5, 4, 2);
+    Quadratic quad2(0.4, 9, -10);
+
+    std::cout
+    << "quadratic #1 info:"                                                              << std::endl 
+    << "    " << quad1.display()                                                         << std::endl
+    << "    first solution:   "     << quad1.solutions[0]                                << std::endl 
+    << "    second solution:  "     << quad1.solutions[1]                                << std::endl << std::endl
+    << "    vertex x:         "     << quad1.vertex().x                                  << std::endl
+    << "    vertex y:         "     << quad1.vertex().y                                  << std::endl << std::endl
+    << "    y-intercept:      "     << quad1.y_intercept()                               << std::endl << std::endl << std::endl
+    << "quadratic #2 info:"                                                              << std::endl 
+    << "    " << quad2.display()                                                         << std::endl
+    << "    first solution:   "     << quad2.solutions[0]                                << std::endl 
+    << "    second solution:  "     << quad2.solutions[1]                                << std::endl << std::endl
+    << "    vertex x:         "     << quad2.vertex().x                                  << std::endl
+    << "    vertex y:         "     << quad2.vertex().y                                  << std::endl << std::endl
+    << "    y-intercept:      "     << quad2.y_intercept()                               << std::endl << std::endl << std::endl
+    << "program executed in " << t.elapsed() << "s"                                      << std::endl;
+}
+
 int main()
 {
-    quadratic quad;
-    quad.a = 5;
-    quad.b = 2;
-    quad.c = -9;
-
-    quad.init_solutions();
-
-    std::cout 
-    << "first solution:   " << quad.solutions[0] << std::endl 
-    << "second solution:  " << quad.solutions[1] << std::endl << std::endl
-
-    << "vertex x:         " << quad.vertex().x << std::endl
-    << "vertex y:         " << quad.vertex().y << std::endl;
-
+    test_quadratic();
     return 0;
 }

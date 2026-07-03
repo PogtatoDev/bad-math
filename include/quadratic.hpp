@@ -1,15 +1,45 @@
 #pragma once
 #include "constants.hpp"
 #include "vector2.hpp"
+#include <string>
 
-struct quadratic
+enum form
 {
+    STANDARD,
+    INTERCEPT,
+    VERTEX
+};
+
+
+struct Quadratic
+{
+      private:
 	void init_solutions();
+
       public:
+	real eq(real x);
 	real a;
 	real b;
 	real c;
 	cmplx solutions[2];
 
-	vector2 vertex();
+	Vector2<real> vertex();
+	real y_intercept();
+
+	Quadratic(real leading_coeff, real second_coeff, real constant)
+	{
+		a = leading_coeff;
+		b = second_coeff;
+		c = constant;
+
+		init_solutions();
+	}
+
+    Quadratic& operator+=(const Quadratic &quad);
+	Quadratic& operator-=(const Quadratic &quad);
+	Quadratic operator+(const Quadratic &quad);
+	Quadratic operator-(const Quadratic &quad);
+
+
+    std::string display();
 };
