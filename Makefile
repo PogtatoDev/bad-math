@@ -1,9 +1,9 @@
 CXX      := g++
 CXXFLAGS := -Wall -Wextra -std=c++20 -Iinclude -O3
 
-SRC_DIR  := src
-OBJ_DIR  := obj
-BIN_DIR  := tests
+SRC_DIR  := ./src
+OBJ_DIR  := ./obj
+BIN_DIR  := ./tests
 
 TARGET   := $(BIN_DIR)/tests.out
 

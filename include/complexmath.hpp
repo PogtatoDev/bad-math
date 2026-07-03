@@ -9,7 +9,7 @@ namespace ComplexMath
 	cmplx complex_exp(cmplx z);
 	cmplx complex_log(cmplx z);
 	cmplx complex_sqrt(real x);
-	std::vector<cmplx> solve_quadratic(real a, real b, real c);
+	void solve_quadratic(real a, real b, real c, cmplx solutions[2]);
 	cmplx complex_square(cmplx z);
 	cmplx complex_sin(cmplx z);
 	cmplx complex_cos(cmplx z);

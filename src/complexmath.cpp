@@ -43,17 +43,23 @@ namespace ComplexMath
 			return Roots::sqrt(x);
 	}
 
-	std::vector<cmplx> solve_quadratic(real a, real b, real c)
+	void solve_quadratic(real a, real b, real c, cmplx solutions[2])
 	{
 		if (a == 0)
-			return {cmplx(std::numeric_limits<real>::quiet_NaN(), 0)};
+		{
+			solutions[0] = std::numeric_limits<real>::quiet_NaN();
+			solutions[1] = std::numeric_limits<real>::quiet_NaN();
+		}
+
 		real discriminant = (b * b) - 4 * a * c;
 		std::vector<cmplx> roots = {
 		    (-cmplx(b, 0.0L) + complex_sqrt(discriminant)) /
 			cmplx((2.0 * a), 0.0L),
 		    (-cmplx(b, 0.0L) - complex_sqrt(discriminant)) /
 			cmplx((2.0 * a), 0.0L)};
-		return roots;
+
+		solutions[0] = roots[0];
+		solutions[1] = roots[1];
 	}
 
 	cmplx complex_square(cmplx z)
