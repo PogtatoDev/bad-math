@@ -98,7 +98,7 @@ namespace Expo
 		if (General::is_int(x) && x < 1420)
 		{
 			int n = static_cast<int>(x);
-			return exp_table[720 + n];
+			return exp_table[710 + n];
 		}
 
 		constexpr double a = (1LL << 52) / 0.6931471805599453;

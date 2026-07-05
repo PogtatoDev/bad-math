@@ -1,6 +1,7 @@
 #pragma once
 #include "constants.hpp"
 #include "vector2.hpp"
+#include <limits>
 #include <string>
 
 enum form
@@ -17,7 +18,7 @@ struct Quadratic
 	void init_solutions();
 
       public:
-	real eq(real x);
+	real evaluate_at(real x);
 	real a;
 	real b;
 	real c;

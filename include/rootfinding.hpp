@@ -26,9 +26,9 @@ namespace RootFinding
 		return next;
 	}
 
-	template <typename Func> real auto_newton(Func f, real guess, real eps = 0.001, int term_cap = 500)
+	template <typename Func> real auto_newton(Func f, real guess, real eps = 0.00001, int term_cap = 500)
 	{
-		auto Df = [f](real t) { return Calculus::derivative_at(f, t); };
+		auto Df = Calculus::derivative(f, eps);
 		if (General::abs(Df(guess)) < 0.01)
 			guess++;
 

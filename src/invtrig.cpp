@@ -31,10 +31,10 @@ namespace InvTrig
 
 	real atan(real x)
 	{
-		if (x == 0)
+		if (General::tol(x))
     		return 0;
 
-		if (x == 1 || x == -1)
+		if (General::tol(x-1) || General::tol(x+1))
 			return x * constants::PI_4;
 
 		if (x > 1)
@@ -52,7 +52,7 @@ namespace InvTrig
 			real add = term / (2 * i + 1);
 			sum += add;
 
-			if (General::abs(add) < const_limits::LIM_EPS)
+			if (General::tol(add))
 				break;
 		}
 

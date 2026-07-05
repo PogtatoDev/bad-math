@@ -4,6 +4,7 @@
 #include "../include/constants.hpp"
 #include "../include/expo.hpp"
 #include "../include/lookup/log_table.hpp"
+#include <limits>
 
 
 namespace Logarithm
@@ -12,6 +13,9 @@ namespace Logarithm
 	{
 		if (x < 0)
 			return std::numeric_limits<real>::quiet_NaN();
+		if (General::tol(x))
+			return -std::numeric_limits<real>::infinity();
+
 		if (General::is_int(x) && x < 511)
 		{
 			int n = static_cast<int>(x);
@@ -81,7 +85,7 @@ namespace Logarithm
 	{
 		if (x < 0)
 			return std::numeric_limits<real>::quiet_NaN();
-		if (x == 0)
+		if (General::tol(x))
 			return -std::numeric_limits<real>::infinity();
 
 		auto f = [x](real t) { return Expo::exp(t) - x; };

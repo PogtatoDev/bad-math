@@ -22,7 +22,7 @@ namespace ComplexMath
 	cmplx complex_exp(cmplx z)
 	{
 		real a = z.real(), b = z.imag();
-		if (b == 0)
+		if (General::tol(b))
 			return e::exp(a);
 		real exp_a = e::exp(a);
 		real sin_b = Trig::sin(b), cos_b = Trig::cos(b);
@@ -45,10 +45,11 @@ namespace ComplexMath
 
 	void solve_quadratic(real a, real b, real c, cmplx solutions[2])
 	{
-		if (a == 0)
+		if (General::tol(a))
 		{
 			solutions[0] = std::numeric_limits<real>::quiet_NaN();
 			solutions[1] = std::numeric_limits<real>::quiet_NaN();
+			return;
 		}
 
 		real discriminant = (b * b) - 4 * a * c;
@@ -97,7 +98,7 @@ namespace ComplexMath
 
 	cmplx complex_log_gamma(cmplx z)
 	{
-		if (z.imag() == 0)
+		if (g::tol(z.imag()))
 			return Special::log_gamma(z.real());
 
 		if (z.real() > 1)

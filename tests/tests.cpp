@@ -1,3 +1,4 @@
+#include "../include/linear.hpp"
 #include "../include/full_lib.hpp"
 #include <chrono>
 #include <cmath>
@@ -83,7 +84,7 @@ template <typename Func1, typename Func2> void test(Func1 f1, Func2 f2)
 
 void test_quadratic()
 {
-    Timer t;
+
     Quadratic quad1(5, 4, 2);
     Quadratic quad2(0.4, 9, -10);
 
@@ -101,12 +102,34 @@ void test_quadratic()
     << "    second solution:  "     << quad2.solutions[1]                                << std::endl << std::endl
     << "    vertex x:         "     << quad2.vertex().x                                  << std::endl
     << "    vertex y:         "     << quad2.vertex().y                                  << std::endl << std::endl
-    << "    y-intercept:      "     << quad2.y_intercept()                               << std::endl << std::endl << std::endl
-    << "program executed in " << t.elapsed() << "s"                                      << std::endl;
+    << "    y-intercept:      "     << quad2.y_intercept()                               << std::endl << std::endl << std::endl;
+}
+
+void test_linear()
+{
+    Linear l1(5, 9);
+    Linear l2(0.2, constants::E);
+
+    std::cout
+    << "linear #1 info:   "                                                           << std::endl 
+    << "    " << l1.display()                                                         << std::endl
+    << "    x-intercept:      "     << l1.x_intercept()                               << std::endl 
+    << "    y-intercept:      "     << l1.y_intercept()                               << std::endl << std::endl << std::endl
+    << "linear #2 info:   "                                                           << std::endl 
+    << "    " << l2.display()                                                         << std::endl
+    << "    x-intercept:      "     << l2.x_intercept()                               << std::endl 
+    << "    y-intercept:      "     << l2.y_intercept()                               << std::endl << std::endl << std::endl
+    << "solution for equation " << l1.display() << " = " << l2.display() << ": "      << std::endl
+    << "    x = "  << solve_linear(l1, l2)                                            << std::endl;
+
 }
 
 int main()
 {
+    Timer t;
     test_quadratic();
+    test_linear();
+
+    std::cout << "program executed in " << t.elapsed() << "s";
     return 0;
 }

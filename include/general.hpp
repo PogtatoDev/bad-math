@@ -18,4 +18,5 @@ namespace General
     real ldexp(real x, int e);
     real max(real x, real y);
     real min(real x, real y);
+    bool tol(real x, real eps = 0.0001);
 }

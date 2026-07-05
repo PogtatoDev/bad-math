@@ -2,6 +2,7 @@
 
 #include "constants.hpp"
 #include "general.hpp"
+#include <functional>
 
 namespace Calculus
 {
@@ -99,7 +100,15 @@ namespace Calculus
 		return approx * h / 3.0;
 	}
 
-	template <typename Func> real derivative_at(Func f, real x)
+	template <typename Func> auto derivative(Func f, real eps = 0.000001)
+	{
+		auto Df = [f, eps](real x)
+	    { return (f(x + eps) - f(x - eps)) / (2 * eps); };
+
+		return Df;
+	}
+
+	template <typename Func> real derivative_at(Func f, real x, real eps = 0.000001)
 	{
 		const real h = const_limits::LIM_EPS;
 		return (f(x + h) - f(x - h)) / (2 * h);
@@ -110,4 +119,11 @@ namespace Calculus
 		return simpson_integral(f, start, end) / (end - start);
 	}
 
+	template <typename Func> auto taylor_polynomial(Func f, int degree)
+	{
+		auto taylor_f = []( real t ) 
+		{ return t + 1; };
+
+		return f;
+	}
 };

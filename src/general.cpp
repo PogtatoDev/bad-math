@@ -155,4 +155,9 @@ namespace General
 		else
 			return y;
 	}
+
+	bool tol(real x, real eps)
+	{
+		return (abs(x) < eps);
+	}
 }; // namespace General

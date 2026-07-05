@@ -10,15 +10,17 @@ void Quadratic::init_solutions()
 	ComplexMath::solve_quadratic(a, b, c, solutions);
 }
 
-real Quadratic::eq(real x)
+real Quadratic::evaluate_at(real x)
 {
 	return a * (x * x) + b * x + c;
 }
 
 Vector2<real> Quadratic::vertex()
 {
+    if (a == 0)
+		return Vector2(std::numeric_limits<real>::quiet_NaN(), std::numeric_limits<real>::quiet_NaN());
 	real x = -b / (2 * a);
-	real y = eq(-b / (2 * a));
+	real y = evaluate_at(-b / (2 * a));
 	Vector2<real> vertex(x, y);
 
 	return vertex;
@@ -26,7 +28,7 @@ Vector2<real> Quadratic::vertex()
 
 real Quadratic::y_intercept()
 {
-	return eq(0);
+	return evaluate_at(0);
 }
 
 

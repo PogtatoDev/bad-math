@@ -1,0 +1,1323 @@
+#include "../include/complexmath.hpp" 
+ 
+#include "../include/constants.hpp" 
+#include "../include/expo.hpp" 
+#include "../include/special.hpp" 
+#include "../include/trig.hpp" 
+#include "../include/logarithm.hpp" 
+#include "../include/general.hpp" 
+#include "../include/roots.hpp" 
+#include <limits> 
+
+namespace ComplexMath
+{
+	namespace e = Expo;
+	namespace l = Logarithm;
+    namespace g = General;
+
+	real arg(cmplx z)
+	{
+		return Special::atan2(z.imag(), z.real());
+	}
+	cmplx complex_exp(cmplx z)
+	{
+		real a = z.real(), b = z.imag();
+		if (b == 0)
+			return e::exp(a);
+		real exp_a = e::exp(a);
+		real sin_b = Trig::sin(b), cos_b = Trig::cos(b);
+
+		return cmplx(exp_a * cos_b, exp_a * sin_b);
+	}
+
+	cmplx complex_log(cmplx z)
+	{
+		return cmplx(l::log(std::abs(z)), arg(z));
+	}
+
+	cmplx complex_sqrt(real x)
+	{
+		if (x < 0)
+			return cmplx(0, Roots::sqrt(-x));
+		else
+			return Roots::sqrt(x);
+	}
+
+	void solve_quadratic(real a, real b, real c, cmplx solutions[2])
+	{
+		if (a == 0)
+		{
+			solutions[0] = std::numeric_limits<real>::quiet_NaN();
+			solutions[1] = std::numeric_limits<real>::quiet_NaN();
+		}
+
+		real discriminant = (b * b) - 4 * a * c;
+		std::vector<cmplx> roots = {
+		    (-cmplx(b, 0.0L) + complex_sqrt(discriminant)) /
+			cmplx((2.0 * a), 0.0L),
+		    (-cmplx(b, 0.0L) - complex_sqrt(discriminant)) /
+			cmplx((2.0 * a), 0.0L)};
+
+		solutions[0] = roots[0];
+		solutions[1] = roots[1];
+	}
+
+	cmplx complex_square(cmplx z)
+	{
+		real a = z.real(), b = z.imag();
+		return cmplx(a*a - b*b, 2 * a * b);
+	}
+
+	cmplx complex_sin(cmplx z)
+	{
+		cmplx a = complex_exp(constants::i * z);
+		cmplx b = 1.0 / a;
+
+		return (a - b) / cmplx(0.0, 2);
+	}
+
+	cmplx complex_cos(cmplx z)
+	{
+		cmplx a = complex_exp(constants::i * z);
+		cmplx b = 1.0 / a;
+
+		return (a + b) / 2.0;
+	}
+
+	cmplx complex_tan(cmplx z)
+	{
+		return complex_sin(z) / complex_cos(z);
+	}
+	cmplx complex_pow(cmplx z, cmplx w)
+	{
+		cmplx logz = complex_log(z);
+
+		return complex_exp(w * logz);
+	}
+
+	cmplx complex_log_gamma(cmplx z)
+	{
+		if (z.imag() == 0)
+			return Special::log_gamma(z.real());
+
+		if (z.real() > 1)
+		{
+			real c = 0.5 * (constants::LOG2 + constants::LOGPI);
+			return (z - 0.5) * complex_log(z) - z + c +
+			       1.0 / (12.0 * z);
+		}
+
+		else
+		{
+			if (g::is_int(z.real()))
+				return std::numeric_limits<real>::quiet_NaN();
+
+			return cmplx(constants::LOGPI, 0) -
+			       complex_log(
+				   complex_sin(cmplx(constants::PI, 0) * z)) +
+			       complex_log_gamma(cmplx(1, 0) - z);
+		}
+	}
+
+	cmplx complex_gamma(cmplx z)
+	{
+		return complex_exp(complex_log_gamma(z));
+	}
+
+	cmplx eta(cmplx s)
+	{
+		auto custom_pow = [](real t, cmplx s)
+		{
+			real logt = l::log(t);
+
+			return complex_exp(s * logt);
+		};
+
+		cmplx sum(0, 0);
+
+		for (int i = 0; i < 30; i++)
+		{
+			cmplx inner(0, 0);
+
+			for (int j = 0; j <= i; j++)
+			{
+				real sign = (j & 1) ? -1.0 : 1.0;
+
+				inner += sign * Special::nCr(i, j) *
+					 custom_pow(j + 1, -s);
+			}
+
+			sum += inner / cmplx(g::exp2(i + 1), 0);
+		}
+
+		return sum;
+	}
+}; // namespace ComplexMath#include "../include/expo.hpp"
+
+#include "../include/constants.hpp"
+#include "../include/general.hpp"
+#include "../include/lookup/exp_table.hpp"
+#include <cmath>
+#include <limits>
+#include <bit>
+#include <cstdint>
+
+namespace Expo
+{
+	real alt_exp(real x)
+	{
+		if (x < -710) return 0;
+		if (x > 710) return std::numeric_limits<real>::infinity();
+		if (std::isnan(x)) return x;
+
+		if (General::is_int(x) && x < 1420) 
+		{
+			int n = static_cast<int>(x);
+			return exp_table[n + 710];
+		}
+
+
+		if (x < 0)
+			return 1.0L / exp(-x);
+
+		int k = std::floor(x / constants::LOG2);
+		real r = x - (k * constants::LOG2);
+		real term = 1;
+		real sum = 1;
+
+		for (int i = 1;; i++)
+		{
+			term *= r / i;
+			sum += term;
+
+			if (General::abs(term) <
+			    const_limits::LIM_EPS * General::abs(sum))
+				break;
+		}
+
+		return General::ldexp(sum, k);
+	}
+
+	// TOOO: fix this bullshit
+	real exp(real x)
+	{
+		if (x < -710) return 0;
+		if (x > 710) return std::numeric_limits<real>::infinity();
+		if (x != x) return x;
+
+		if (General::is_int(x) && x < 1420) 
+		{
+			int n = static_cast<int>(x);
+			return exp_table[n + 710];
+		}
+
+		const real coeff[11] = {
+					1.00000000000000,
+					0.500000000000000,
+					0.166666666666667,
+					0.0416666666666667,
+					0.00833333333333333,
+					0.00138888888888889,
+					0.000198412698412698,
+					0.0000248015873015873,
+					2.75573192239859e-6,
+					2.75573192239859e-7,
+					2.50521083854417e-8};
+
+		if (x < 0) 
+			return 1.0 / exp(-x);
+
+		int n = trunc(x * constants::INV_LOG2);
+		real f = x - n * constants::LOG2;
+
+		real p = 1.0 + f * (
+        coeff[0] + f * (
+        coeff[1] + f * (
+        coeff[2] + f * (
+        coeff[3] + f * (
+        coeff[4] + f * (
+        coeff[5] + f * (
+        coeff[6] + f * (
+        coeff[7] + f * (
+        coeff[8] + f * (
+        coeff[9] + f * (
+        coeff[10]
+        )))))))))));
+
+		return General::ldexp(p, n);
+	}
+
+	real fast_exp(real x)
+	{
+		if (General::is_int(x) && x < 1420)
+		{
+			int n = static_cast<int>(x);
+			return exp_table[720 + n];
+		}
+
+		constexpr double a = (1LL << 52) / 0.6931471805599453;
+		constexpr double b = (1LL << 52) * (1023 - 0.04367744890362246);
+		x = a * x + b;
+
+		return std::bit_cast<double>(static_cast<uint64_t>(x));
+	}
+
+    real exp10(real x)
+    {
+        return exp(x * constants::LOG10) ;
+    }
+
+	real exp2(real x)
+	{
+		return exp(x * constants::LOG2);
+	}
+}; // namespace Expo#include "../include/general.hpp"
+
+#include <cmath>
+#include <bit>
+#include <cstdint>
+
+namespace General
+{
+	real identity(real x)
+	{
+		return x;
+	}
+
+	real square(real x)
+	{
+		return x * x;
+	}
+
+	real cube(real x)
+	{
+		return x * x * x;
+	}
+
+	real factorial(int n)
+	{
+		if (n < 20)
+			return constants::FACTORIAL[n];
+
+		real prod = 1;
+		for (int k = 1; k <= n; k++)
+		{
+			prod *= k;
+		}
+
+		return prod;
+	}
+
+	real abs(real x)
+	{
+		if (x < 0)
+			return -x;
+		return x;
+	}
+
+	bool is_even(int x)
+	{
+		if (x % 2 == 0)
+			return true;
+		return false;
+	}
+
+	bool is_int(real x)
+	{
+		if (General::abs(x - round(x)) < const_limits::LIM_EPS)
+			return true;
+		return false;
+	}
+
+	real int_pow(real x, int n)
+	{
+		if (n == 0)
+			return 1;
+		else if (n == 1)
+			return x;
+		else if (n < 0)
+			return 1.0 / int_pow(x, -n);
+		else if (is_even(n))
+			return int_pow(x*x, n / 2);
+		else
+			return x * int_pow(x*x, (n - 1) / 2);
+	}
+
+	real exp2(int n)
+	{
+		uint64_t bits = uint64_t(n + 1023) << 52;
+		return std::bit_cast<double>(bits);
+	}
+
+	real log2_int(real x)
+	{
+		unsigned int n = std::round(x);
+		return std::bit_width(n) - 1;
+	}
+
+	real frexp(real x, int &e)
+	{
+		union
+		{
+			real d;
+			uint64_t u;
+		} v{x};
+
+		uint64_t bits = v.u;
+
+		uint64_t k = (bits >> 52) & 0x7FF;
+		if (k == 0)
+		{
+			e = 0;
+			return x;
+		}
+
+		bits &= ~(0x7FFULL << 52);
+		bits |= (1022ULL << 52);
+		v.u = bits;
+		e = (int)k - 1022;
+
+		return v.d;
+	}
+
+	real ldexp(real x, int e)
+	{
+		union
+		{
+			real d;
+			uint64_t u;
+		} v{ x };
+
+		uint64_t k = (v.u >> 52) & 0x7FF;
+
+		if (k == 0 || k == 0x7FF)
+			return x;
+
+		k += e;
+
+		if (k >= 0x7FF)
+		{
+			v.u |= (0x7FFULL << 52);
+			return v.d;
+		}
+
+		if ((int64_t)k <= 0)
+		{
+			return 0.0;
+		}
+
+		v.u &= ~(0x7FFULL << 52);
+		v.u |= k << 52;
+
+		return v.d;
+	}
+	
+
+	real max(real x, real y)
+	{
+		if (x > y) 
+			return x;
+		else
+			return y;
+	}
+
+	real min(real x, real y)
+	{
+		if (x < y) 
+			return x;
+		else
+			return y;
+	}
+}; // namespace General#include "../include/hyptrig.hpp"
+
+#include "../include/expo.hpp"
+#include "../include/constants.hpp"
+
+namespace HypTrig
+{
+	namespace e = Expo;
+
+	real sinh(real x)
+	{	
+		real expx = e::exp(x);
+		return (expx - 1.0 / expx) / 2.0;
+	}
+
+	real cosh(real x)
+	{
+		real expx = e::exp(x);
+		return (e::exp(x) + 1.0 / expx) / 2.0;
+	}
+
+	real tanh(real x)
+	{
+		return sinh(x) / cosh(x);
+	}
+	real sech(real x)
+	{
+		return 1.0 / cosh(x);
+	}
+	real csch(real x)
+	{
+		return 1.0 / sinh(x);
+	}
+	real coth(real x)
+	{
+		return 1.0 / tanh(x);
+	}
+}; // namespace HypTrig#include "../include/invhyptrig.hpp"
+
+#include "../include/constants.hpp"
+#include "../include/general.hpp"
+#include "../include/logarithm.hpp"
+#include "../include/roots.hpp"
+
+namespace InvHypTrig
+{
+	real asinh(real x)
+	{
+		return Logarithm::log(x + Roots::sqrt(x * x + 1));
+	}
+	real acosh(real x)
+	{
+		return Logarithm::log(x + Roots::sqrt(x * x - 1));
+	}
+
+	real atanh(real x)
+	{
+		if (General::abs(x) >= 1)
+			return std::numeric_limits<real>::quiet_NaN();
+		const real t = (1 + x) / (1 - x);
+		return 0.5 * Logarithm::log(t);
+	}
+
+	real asech(real x)
+	{
+		return acosh(1.0 / x);
+	}
+	real acsch(real x)
+	{
+		return asinh(1.0 / x);
+	}
+
+	real acoth(real x)
+	{
+		if (General::abs(x) <= 1)
+			return std::numeric_limits<real>::quiet_NaN();
+		const real t = (x + 1) / (x - 1);
+		return 0.5 * Logarithm::log(t);
+	}
+}; // namespace InvHypTrig#include "../include/invtrig.hpp"
+
+#include "../include/constants.hpp"
+#include "../include/rootfinding.hpp"
+#include "../include/trig.hpp"
+#include "../include/roots.hpp"
+#include <limits>
+
+
+namespace InvTrig
+{
+	real asin(real x)
+	{
+		if (General::abs(x) > 1)
+		{
+			return std::numeric_limits<real>::quiet_NaN();
+		}
+
+		auto f = [x](real t) { return Trig::sin(t) - x; };
+		auto Df = [](real t) { return Trig::cos(t); };
+
+		real guess = x / constants::TAU;
+
+		return RootFinding::manual_newton(f, Df, guess);
+	}
+
+	real acos(real x)
+	{
+		return (constants::PI_2) - asin(x);
+	}
+
+	real atan(real x)
+	{
+		if (x == 0)
+    		return 0;
+
+		if (x == 1 || x == -1)
+			return x * constants::PI_4;
+
+		if (x > 1)
+			return constants::PI_2 - atan(1.0 / x);
+		if (x < -1)
+			return -constants::PI_2 - atan(1.0 / x);
+
+		real term = x;
+		real sum = x;
+		real x2 = x * x;
+
+		for (int i = 1; i < 50; i++)
+		{
+			term *= -x2;
+			real add = term / (2 * i + 1);
+			sum += add;
+
+			if (General::abs(add) < const_limits::LIM_EPS)
+				break;
+		}
+
+		return sum;
+	}
+
+	real asec(real x)
+	{
+		return acos(1.0 / x);
+	}
+	real acsc(real x)
+	{
+		return asin(1.0 / x);
+	}
+	real acot(real x)
+	{
+		return atan(1.0 / x);
+	}
+
+	real fast_atan(real x)
+	{
+		if (x == 1 || x == -1)
+			return x * constants::PI_4;
+
+		const real a = 0.0776509570923569;
+		const real b = -0.287434475393028;
+		const real c = constants::PI_4 - a - b;
+
+		auto f = [a, b, c](real t)
+		{ 
+			real t2 = t * t;
+			return ((a*t2 + b)*t2 + c)*t;
+		};
+
+		if (General::abs(x) < 1) 
+			return f(x);
+		if (x > 1)
+			return constants::PI_2 - f(1.0 / x);
+		if (x < -1)
+			return -constants::PI_2 - f(1.0 / x);
+
+		return std::numeric_limits<real>::quiet_NaN();
+	}
+
+	real fast_asin(real x)
+	{
+		if (General::abs(x) > 1)
+			return std::numeric_limits<real>::quiet_NaN();
+
+		if (x == 1)
+			return constants::PI_2;
+
+		if (x == -1)
+			return -constants::PI_2;
+		
+		return fast_atan(x / Roots::sqrt(1 - x*x));
+	}
+}; // namespace InvTrig#include "../include/linear.hpp"
+#include "../include/constants.hpp"
+#include "../include/roots.hpp"
+#include <limits>
+
+real Linear::evaluate_at(real x)
+{
+    return m * x + b;
+}
+
+real Linear::x_intercept()
+{
+    if (m == 0)
+        return std::numeric_limits<real>::quiet_NaN();
+
+    return -b / m;
+}
+
+real Linear::y_intercept()
+{
+    return b;
+}
+
+real Linear::distance_between(real x1, real x2)
+{
+    real xdiff = x2 - x1;
+    real ydiff = evaluate_at(x2) - evaluate_at(x1);
+    
+
+    return Roots::sqrt(xdiff * xdiff + ydiff * ydiff);
+}
+
+std::string Linear::display()
+{
+    std::ostringstream stream;
+    stream << m << "x + " << b;
+    return stream.str();
+}
+
+
+real solve_linear(Linear l1, Linear l2)
+{
+    real a = l1.m;
+    real b = l1.b;
+    real c = l2.m;
+    real d = l2.b;
+
+    if (a == c)
+        return std::numeric_limits<real>::quiet_NaN();
+
+    return (d-b) / (a-c);
+}#include "../include/logarithm.hpp"
+
+#include "../include/rootfinding.hpp"
+#include "../include/constants.hpp"
+#include "../include/expo.hpp"
+#include "../include/lookup/log_table.hpp"
+
+
+namespace Logarithm
+{
+	real log(real x, real eps)
+	{
+		if (x < 0)
+			return std::numeric_limits<real>::quiet_NaN();
+		if (General::is_int(x) && x < 511)
+		{
+			int n = static_cast<int>(x);
+			return log_table[n];
+		}
+			
+		int k;
+		real m = frexp(x, &k);
+
+		real y = m - 1;
+		for (int i = 0; i < 4; i++)
+		{
+			real exp_y = Expo::exp(y);
+			real r = m / exp_y;
+
+			real delta = 2 * (r - 1) / (r + 1);
+
+			y += delta;
+
+			if (std::abs(delta) < eps)
+				break;
+		}
+
+		return y + k * constants::LOG2;
+	}
+
+	real alt_log(real x)
+	{
+		if (x < 0)
+			return std::numeric_limits<real>::quiet_NaN();
+
+		if (General::is_int(x) && x < 511)
+		{
+			int n = static_cast<int>(x);
+			return log_table[n];
+		}
+		int k;
+		real m = frexp(x, &k);
+
+		real y = m - 1;
+		for (int i = 0; i < 8; i++)
+		{
+			real exp_y = Expo::alt_exp(y);
+			real r = m / exp_y;
+
+			real delta = 2 * (r - 1) / (r + 1);
+
+			y += delta;
+
+			if (std::abs(delta) < const_limits::LIM_EPS)
+				break;
+		}
+
+		return y + k * constants::LOG2;
+	}
+
+	real bisection_log(real x, real bisection_acc = 0.01)
+	{
+		if (x < 0)
+			return std::numeric_limits<real>::quiet_NaN();
+		auto f = [x](real t) { return Expo::exp(t) - x; };
+
+		return RootFinding::auto_bisection_method(f, bisection_acc);
+	}
+
+	real newton_log(real x)
+	{
+		if (x < 0)
+			return std::numeric_limits<real>::quiet_NaN();
+		if (x == 0)
+			return -std::numeric_limits<real>::infinity();
+
+		auto f = [x](real t) { return Expo::exp(t) - x; };
+		auto Df = [](real t) { return Expo::exp(t); };
+
+		int guess = General::log2_int(std::round(x));
+
+		return RootFinding::manual_newton(f, Df, guess);
+	}
+
+	real log_base(real x, real base)
+	{
+		return Logarithm::log(x) / log(base);
+	}
+	real log10(real x)
+	{
+		return log(x) / constants::LOG10;
+	}
+}; // namespace Logarithm#include "../include/numbertheory.hpp"
+
+#include "../include/constants.hpp"
+#include "../include/roots.hpp"
+#include "../include/general.hpp"
+
+namespace NumberTheory
+{
+	real rising_factorial(real x, int n)
+	{
+		real prod = 1;
+
+		for (int i = 0; i <= n - 1; i++)
+		{
+			prod *= (x + i);
+		}
+
+		return prod;
+	}
+
+	real termial(real x)
+	{
+		return x * (x + 1) / 2.0;
+	}
+
+	std::vector<int> prime_factors(int n)
+	{
+		real root_n = Roots::sqrt(n);
+
+		std::vector<int> factors = {};
+		for (int i = 2; i <= root_n; i++)
+		{
+			while (n % i == 0)
+			{
+				factors.push_back(i);
+				n = n / i;
+			}
+		}
+
+		return factors;
+	}
+
+	bool is_prime(int n)
+	{
+		if (n < 2)
+			return false;
+
+		if (General::is_even(n))
+			return n == 2;
+
+		for (int i = 3; i <= n / i; i += 2)
+		{
+			if (n % i == 0)
+				return false;
+		}
+
+		return true;
+	}
+
+	int nth_prime(int n)
+	{
+		int count = 0;
+		int k = 1;
+
+		while (count < n)
+		{
+			k++;
+			if (is_prime(k))
+			{
+				count++;
+			}
+		}
+		return k;
+	}
+
+}; // namespace NumberTheory#include "../include/powers.hpp"
+
+#include "../include/constants.hpp"
+#include "../include/expo.hpp"
+#include "../include/roots.hpp"
+#include "../include/logarithm.hpp"
+#include "../include/general.hpp"
+
+namespace Powers
+{
+    namespace e = Expo;
+    namespace l = Logarithm;
+
+	real log_pow(real x, real y)
+	{
+		if (y == 0)
+			return 1;
+		if (y < 0)
+			return 1.0 / log_pow(x, -y);
+
+		real logx = l::log(x);
+
+		return e::exp(y * logx);
+	}
+
+	real rational_pow(real x, int a, int b)
+	{
+		if (a == 0)
+			return 1;
+		return Roots::nth_root(General::int_pow(x, a), b);
+	}
+} // namespace Powers#include "../include/quadratic.hpp"
+#include "../include/complexmath.hpp"
+#include "../include/vector2.hpp"
+#include <string>
+#include <sstream>
+
+
+void Quadratic::init_solutions()
+{
+	ComplexMath::solve_quadratic(a, b, c, solutions);
+}
+
+real Quadratic::evaluate_at(real x)
+{
+	return a * (x * x) + b * x + c;
+}
+
+Vector2<real> Quadratic::vertex()
+{
+    if (a == 0)
+		return Vector2(std::numeric_limits<real>::quiet_NaN(), std::numeric_limits<real>::quiet_NaN());
+	real x = -b / (2 * a);
+	real y = evaluate_at(-b / (2 * a));
+	Vector2<real> vertex(x, y);
+
+	return vertex;
+}
+
+real Quadratic::y_intercept()
+{
+	return evaluate_at(0);
+}
+
+
+
+Quadratic& Quadratic::operator+=(const Quadratic &quad)
+{
+    a += quad.a;
+    b += quad.b;
+    c += quad.c;
+
+    return (*this);
+}
+Quadratic& Quadratic::operator-=(const Quadratic &quad)
+{
+    a -= quad.a;
+    b -= quad.b;
+    c -= quad.c;
+
+    return (*this);
+}
+
+Quadratic Quadratic::operator+(const Quadratic &quad)
+{
+    Quadratic temp(*this);
+	temp += quad;
+	return temp;
+}
+Quadratic Quadratic::operator-(const Quadratic &quad)
+{
+    Quadratic temp(*this);
+	temp -= quad;
+	return temp;
+}
+std::string Quadratic::display()
+{
+    std::ostringstream stream;
+    stream << a << "x^2 + " << b << "x + " << c;
+    return stream.str();
+}
+#include "../include/roots.hpp"
+
+#include "../include/constants.hpp"
+#include "../include/expo.hpp"
+#include "../include/general.hpp"
+#include "../include/logarithm.hpp"
+#include "../include/lookup/sqrt_table.hpp"
+#include "../include/rootfinding.hpp"
+
+
+namespace Roots
+{
+	namespace e = Expo;
+	namespace l = Logarithm;
+	real sqrt(real x)
+	{
+		if (x < 0)
+			return std::numeric_limits<real>::quiet_NaN();
+		if (x == 0)
+			return 0;
+
+		if (General::is_int(x) && x < 2048)
+		{
+			int n = static_cast<int>(x);
+			return sqrt_table[n];
+		}
+
+		int k;
+		real m = General::frexp(x, k);
+
+		m *= 1 + (k & 1);
+		k -= (k & 1);
+
+		real y = 0.41731 + 0.59016 * m;
+
+		y = 0.5 * (y + m / y);
+		y = 0.5 * (y + m / y);
+		y = 0.5 * (y + m / y);
+
+		return General::ldexp(y, k / 2);
+	}
+
+	real bisection_sqrt(real x, real eps = 0.01)
+	{
+		if (x < 0)
+			return std::numeric_limits<real>::quiet_NaN();
+		if (x == 0)
+			return 0;
+
+		if (General::is_int(x) && x < 2048)
+		{
+			int n = static_cast<int>(x);
+			return sqrt_table[n];
+		}
+		int k;
+		real m = General::frexp(x, k);
+		m *= 1 + (k & 1);
+		k -= (k & 1);
+		auto f = [m](real t) { return (t * t) - m; };
+		real y = RootFinding::manual_bisection_method(f, 0.5, 2, eps);
+
+		return General::ldexp(y, k / 2);
+	}
+
+	real log_root(real x, int n)
+	{
+		if (General::is_even(n) && x < 0)
+			return std::numeric_limits<real>::quiet_NaN();
+		return e::exp(1.0 / n * l::log(x));
+	}
+
+	real nth_root(real x, int n)
+	{
+		if (General::is_even(n) && x < 0)
+			return std::numeric_limits<real>::quiet_NaN();
+		double guess = x / n;
+		auto f = [x, n](real t) { return General::int_pow(t, n) - x; };
+		auto Df = [n](real t)
+		{ return n * General::int_pow(t, n - 1); };
+		return RootFinding::manual_newton(f, Df, guess);
+	}
+
+	real bisection_nth_root(real x, int n, real acc = 0.01)
+	{
+		auto f = [x, n](real t) { return General::int_pow(t, n) - x; };
+
+		return RootFinding::auto_bisection_method(f, acc);
+	}
+} // namespace Roots#include "../include/special.hpp"
+
+#include "../include/constants.hpp"
+#include "../include/calculus.hpp"
+#include "../include/expo.hpp"
+#include "../include/logarithm.hpp"
+#include "../include/powers.hpp"
+#include "../include/trig.hpp"
+#include "../include/invtrig.hpp"
+#include "../include/rootfinding.hpp"
+#include "../include/roots.hpp"
+
+namespace Special
+{
+	namespace e = Expo;
+    namespace g = General;
+    namespace l = Logarithm;
+
+	real harmonic(real n)
+	{
+		if (n == 1)
+			return 1;
+		if (n == 2)
+			return 1.5;
+		real n2 = n * n;
+		real n4 = n2 * n2;
+		return l::log(n) + constants::GAMMA +
+		       1.0 / (2.0 * n) - 1.0 / (12.0 * n2) +
+		       1.0 / (120.0 * n4);
+	}
+
+	namespace DirichletSeries
+	{
+		real int_zeta(int s)
+		{
+			if (s == 2)
+				return constants::PI_SQ / 6.0;
+			if (s == 3)
+				return constants::ZETA3;
+			if (s == 4)
+				return constants::PI_SQ * constants::PI_SQ /
+				       90.0;
+
+			if (s < 1)
+				return std::numeric_limits<real>::quiet_NaN();
+
+			auto f = [s](real t)
+			{ return 1.0 / General::int_pow(t, s); };
+
+			return Calculus::infinite_sum(f, 1);
+		}
+
+		real int_eta(int s)
+		{
+			if (s == 1)
+				return constants::LOG2;
+
+			auto f = [s](real t)
+			{ return 1.0 / General::int_pow(t, s); };
+
+			return Calculus::infinite_sum(f, 1, true);
+		}
+
+		real real_zeta(real s)
+		{
+			if (s == 2)
+				return constants::PI_SQ / 6.0;
+			if (s == 3)
+				return constants::ZETA3;
+			if (s == 4)
+				return constants::PI_SQ * constants::PI_SQ /
+				       90.0;
+
+			if (s < 1)
+				return std::numeric_limits<real>::quiet_NaN();
+
+			auto f = [s](real t)
+			{ return 1.0 / Powers::log_pow(t, s); };
+
+			return Calculus::infinite_sum(f, 1, false);
+		}
+
+		real real_eta(int s)
+		{
+			if (s == 1)
+				return constants::LOG2;
+
+			auto f = [s](real t)
+			{ return 1.0 / General::int_pow(t, s); };
+
+			return Calculus::infinite_sum(f, 1, true);
+		}
+	}; // namespace DirichletSeries
+
+	real log_gamma(real x)
+	{
+		int N = 10;
+
+		if (x == 1)
+			return 0;
+		if (x == 0.5)
+			return 0.5 * constants::LOGPI;
+		if (x == 2)
+			return 0;
+		if (x > 0)
+		{
+			if (General::is_int(x) && x < 20)
+			{
+				int n = static_cast<int>(std::round(x));
+				
+				return l::log(General::factorial(n-1));
+			}
+
+			real c = 0.5 * (constants::LOG2 + constants::LOGPI);
+			real sum = 0;
+			for (int k = 1; k <= N - 1; k++)
+			{
+				sum += constants::BERNOULLI[2 * k] /
+				       (2 * k * (2 * k - 1)) * 1.0 /
+				       General::int_pow(x, 2 * k - 1);
+			}
+
+			return (x - 0.5) * l::log(x) - x + c + sum;
+		}
+
+		else
+		{
+			if (General::is_int(x))
+				return std::numeric_limits<real>::quiet_NaN();
+
+			return constants::LOGPI -
+			       l::log(Trig::sin(constants::PI * x)) -
+			       log_gamma(1 - x);
+		}
+	}
+
+	real gamma(real s)
+	{
+		return e::exp(log_gamma(s));
+	}
+
+	real beta(real x, real y)
+	{
+		return (gamma(x) * gamma(y)) / gamma(x + y);
+	}
+
+	real lamb_w(real x)
+	{
+		namespace e = Expo;
+
+		auto f = [x](real t) { return t * e::exp(t) - x; };
+		auto Df = [](real t) { return e::exp(t) * (t + 1); };
+		real guess = 0;
+
+		if (x < constants::E)
+			guess = x;
+		else
+		{
+			real l = l::log(x);
+			guess = l - l::log(l);
+		}
+
+		return RootFinding::manual_newton(f, Df, guess);
+	}
+
+	real atan2(real y, real x)
+	{
+		namespace i = InvTrig;
+		real P = constants::PI;
+		if (x > 0)
+			return i::atan(y / x);
+		if (x < 0 && y >= 0)
+			return i::atan(y / x) + P;
+		if (x < 0 && y < 0)
+			return i::atan(y / x) - P;
+		if (x == 0 && y > 0)
+			return P / 2;
+		if (x == 0 && y < 0)
+			return -P / 2;
+
+		return 0.0;
+	}
+
+	real nCr(real n, real r)
+	{
+		if (r < 0 || r > n)
+			return 0;
+
+		if (r > n - r)
+			r = n - r;
+
+		real result = 1;
+
+		for (int i = 1; i <= r; i++)
+		{
+			result *= (n - r + i);
+			result /= i;
+		}
+
+		return result;
+	}
+
+	real smax(real x, real y, real bias)
+	{
+		real xy = x - y;
+		return (x + y + Roots::sqrt(xy * xy + bias)) / 2.0;
+	}
+
+
+	real smin(real x, real y, real bias)
+	{
+		real xy = x - y;
+		return (x + y - Roots::sqrt(xy * xy + bias)) / 2.0;
+	}
+}; // namespace Special#include "../include/trig.hpp"
+
+#include "../include/constants.hpp"
+#include "../include/general.hpp"
+
+#include <cmath>
+
+
+namespace Trig
+{
+	real alt_sin(real x)
+	{
+		x = std::fmod(x, constants::TAU);
+		x = General::min(x, constants::PI - x);
+		x = General::max(x, -constants::PI - x);
+		x = General::min(x, constants::PI - x);
+
+		real term = x;
+		real approx = x;
+		for (int i = 1;; i++)
+		{
+			term *= -x * x / ((2.0 * i) * (2.0 * i + 1));
+			approx += term;
+
+			if (General::abs(term) < const_limits::LIM_EPS)
+				break;
+		}
+		return approx;
+	}
+
+	real sin(real x)
+	{
+		x = std::fmod(x, constants::TAU);
+		x = General::min(x, constants::PI - x);
+		x = General::max(x, -constants::PI - x);
+		x = General::min(x, constants::PI - x);
+		
+		real x1 = x;
+		real x2 = x * x;
+		real approx = x1*(0.999999994686007336752316120259640318 + x2*(-0.166666566840071513590695269999128453 + x2*(0.00833302513896936729848481553136180314 + x2*(-0.000198074187274269708745741141088641071 + 2.60190306765146018582500885337773154e-6*x2))));
+		return approx;
+	}
+
+	real cos(real x)
+	{
+		return sin(constants::PI_2 - x);
+	}
+
+	real alt_cos(real x)
+	{
+		return alt_sin(constants::PI_2 - x);
+	}
+
+	real tan(real x)
+	{
+		return sin(x) / cos(x);
+	}
+
+	real sec(real x)
+	{
+		return 1.0 / cos(x);
+	}
+	real csc(real x)
+	{
+		return 1.0 / sin(x);
+	}
+	real cot(real x)
+	{
+		return 1.0 / tan(x);
+	}
+}; // namespace Trig
