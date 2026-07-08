@@ -3,11 +3,11 @@
 #include "../include/constants.hpp"
 #include "../include/general.hpp"
 #include "../include/lookup/exp_table.hpp"
+#include "../include/lookup/exp2_table.hpp"
 #include <cmath>
 #include <limits>
 #include <bit>
 #include <cstdint>
-
 namespace Expo
 {
 	real alt_exp(real x)
@@ -44,14 +44,16 @@ namespace Expo
 		return General::ldexp(sum, k);
 	}
 
-	// TOOO: fix this bullshit
+	// TODO: fix this bullshit
 	real exp(real x)
 	{
 		if (x < -710) return 0;
 		if (x > 710) return std::numeric_limits<real>::infinity();
 		if (x != x) return x;
 
-		if (General::is_int(x) && x < 1420) 
+		int N = 1;
+
+		if (General::is_int(x) && General::abs(x) < 710) 
 		{
 			int n = static_cast<int>(x);
 			return exp_table[n + 710];
@@ -73,22 +75,24 @@ namespace Expo
 		if (x < 0) 
 			return 1.0 / exp(-x);
 
-		int n = trunc(x * constants::INV_LOG2);
+		int n = round(x * constants::INV_LOG2);
 		real f = x - n * constants::LOG2;
 
-		real p = 1.0 + f * (
-        coeff[0] + f * (
-        coeff[1] + f * (
-        coeff[2] + f * (
-        coeff[3] + f * (
-        coeff[4] + f * (
-        coeff[5] + f * (
-        coeff[6] + f * (
-        coeff[7] + f * (
-        coeff[8] + f * (
-        coeff[9] + f * (
-        coeff[10]
-        )))))))))));
+
+		real p =
+			coeff[0] + f * (
+			coeff[1] + f * (
+			coeff[2] + f * (
+			coeff[3] + f * (
+			coeff[4] + f * (
+			coeff[5] + f * (
+			coeff[6] + f * (
+			coeff[7] + f * (
+			coeff[8] + f * (
+			coeff[9] + f * (
+			coeff[10]
+			))))))))));
+
 
 		return General::ldexp(p, n);
 	}

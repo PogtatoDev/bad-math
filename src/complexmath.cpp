@@ -19,11 +19,13 @@ namespace ComplexMath
 	{
 		return Special::atan2(z.imag(), z.real());
 	}
+
 	cmplx complex_exp(cmplx z)
 	{
 		real a = z.real(), b = z.imag();
 		if (General::tol(b))
 			return e::exp(a);
+		
 		real exp_a = e::exp(a);
 		real sin_b = Trig::sin(b), cos_b = Trig::cos(b);
 

@@ -1,16 +1,7 @@
 #pragma once
 #include "constants.hpp"
 #include "vector2.hpp"
-#include <limits>
 #include <string>
-
-enum form
-{
-    STANDARD,
-    INTERCEPT,
-    VERTEX
-};
-
 
 struct Quadratic
 {
@@ -22,7 +13,7 @@ struct Quadratic
 	real a;
 	real b;
 	real c;
-	cmplx solutions[2];
+	cmplx roots[2];
 
 	Vector2<real> vertex();
 	real y_intercept();

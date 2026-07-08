@@ -7,7 +7,7 @@
 
 void Quadratic::init_solutions()
 {
-	ComplexMath::solve_quadratic(a, b, c, solutions);
+	ComplexMath::solve_quadratic(a, b, c, roots);
 }
 
 real Quadratic::evaluate_at(real x)
@@ -28,10 +28,8 @@ Vector2<real> Quadratic::vertex()
 
 real Quadratic::y_intercept()
 {
-	return evaluate_at(0);
+	return c;
 }
-
-
 
 Quadratic& Quadratic::operator+=(const Quadratic &quad)
 {
@@ -41,6 +39,7 @@ Quadratic& Quadratic::operator+=(const Quadratic &quad)
 
     return (*this);
 }
+
 Quadratic& Quadratic::operator-=(const Quadratic &quad)
 {
     a -= quad.a;

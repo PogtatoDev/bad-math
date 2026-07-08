@@ -15,8 +15,20 @@ namespace Calculus
 		return f(x + eps);
 	}
 
-	template <typename Func> real sum(Func f, real start, real end)
+	template <typename Func> real sum(Func f, real start, real end, bool alternating = false)
 	{
+		if (alternating)
+		{
+			real sum = 0;
+			real sign = 1;
+			for (int k = start; k <= end; k++)
+			{
+				sum += f(k) * sign;
+				sign *= -1;
+			}
+
+			return sum;
+		}
 		real sum = 0;
 		for (int k = start; k <= end; k++)
 		{

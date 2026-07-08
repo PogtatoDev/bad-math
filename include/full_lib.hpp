@@ -7,6 +7,7 @@
 #include "hyptrig.hpp"
 #include "invhyptrig.hpp"
 #include "invtrig.hpp"
+#include "linear.hpp"
 #include "logarithm.hpp"
 #include "numbertheory.hpp"
 #include "powers.hpp"
@@ -16,3 +17,4 @@
 #include "special.hpp"
 #include "trig.hpp"
 #include "vector2.hpp"
+#include "vector3.hpp"

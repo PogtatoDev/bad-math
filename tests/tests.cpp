@@ -1,17 +1,22 @@
-#include "../include/linear.hpp"
 #include "../include/full_lib.hpp"
+#include "../include/linear.hpp"
+#include "../include/logarithm.hpp"
 #include <chrono>
 #include <cmath>
-#include <cstdlib>
+#include <complex>
 #include <iostream>
-struct benchmark
+#include <ostream>
+
+class Benchmark
 {
-    real full_time;
-    real sink;
-    real func1_time;
-    real func2_time;
-    real func1_sink;
-    real func2_sink;
+      public:
+	real full_time;
+	real sink;
+	real func1_time;
+	real func2_time;
+	real func1_sink;
+	real func2_sink;
+	real ehhhror;
 };
 
 class Timer
@@ -32,104 +37,141 @@ class Timer
 	}
 };
 
-template <typename Func1, typename Func2> 
-benchmark bench(Func1 func1, Func2 func2, float start, float end, float increment)
+template <typename Func1, typename Func2>
+Benchmark bench(Func1 func1, Func2 func2, real start, real end,
+		real increment)
 {
-    real sink = 0;
-    Timer t;
+	real sink = 0;
+	Timer t;
 
-    for (float i = start; i < end; i += increment)
-    {
-        sink += General::abs(func1(i) - func2(i));
-    }
+	for (real i = start; i < end; i += increment)
+	{
+		sink += General::abs(func1(i) - func2(i));
+	}
 
-    benchmark temp;
-    temp.sink = sink;
-    temp.full_time = t.elapsed();
-    t.reset();
-    sink = 0;
-    for (float i = start; i < end; i += increment)
-    {
-        sink += func1(i);
-    }
-    
-    temp.func1_sink = sink;
-    temp.func1_time = t.elapsed();
+	Benchmark temp;
+	temp.sink = sink;
+	temp.full_time = t.elapsed();
+	sink = 0;
+	for (real i = start; i < end; i += increment)
+	{
+		sink += General::abs(func1(i) - func2(i)) / func1(i);
+	}
+	temp.ehhhror = sink;
+	t.reset();
+	sink = 0;
+	for (real i = start; i < end; i += increment)
+	{
+		sink += func1(i);
+	}
 
-    t.reset();
-    sink = 0;
-    for (float i = start; i < end; i += increment)
-    {
-        sink += func2(i);
-    }
+	temp.func1_sink = sink;
+	temp.func1_time = t.elapsed();
 
-    temp.func2_sink = sink;
-    temp.func2_time = t.elapsed();
+	t.reset();
+	sink = 0;
+	for (real i = start; i < end; i += increment)
+	{
+		sink += func2(i);
+	}
 
-    return temp;
+	temp.func2_sink = sink;
+	temp.func2_time = t.elapsed();
+
+	return temp;
 }
 
-template <typename Func1, typename Func2> void test(Func1 f1, Func2 f2)
+template <typename Func1, typename Func2>
+void test(Func1 f1, std::string name1, Func2 f2, std::string name2)
 {
-    benchmark tests = bench(f1, f2, -10000000, 10000000, 1);
+	const real start = 1;
+	const real end = 100000000;
+	const real increment = 0.2;
+	Benchmark tests = bench(f1, f2, start, end, increment);
 
-    std::cout
-    << "full time taken:     " << tests.full_time  << std::endl
-    << "full error:          " << tests.sink       << std::endl
-    << "func 1 time taken:   " << tests.func1_time << std::endl
-    << "func 2 time taken:   " << tests.func2_time << std::endl
-    << "func 1 sink:         " << tests.func1_sink << std::endl
-    << "func 2 sink:         " << tests.func2_sink << std::endl;
+	std::cout << "test results for " << name1 << " (func1) vs " << name2 << " (func2) from " << start << " to " << end
+		  << " with increment " << increment << std::endl
+		  << "	full time taken:                  " << tests.full_time
+		  << std::endl
+		  << "	shitty error:                     " << tests.sink
+		  << std::endl
+		  << "	good error:                       " << tests.ehhhror
+		  << std::endl
+		  << "	func 1 time taken:                " << tests.func1_time
+		  << std::endl
+		  << "	func 2 time taken:                " << tests.func2_time
+		  << std::endl
+		  << "	func 1 sink:                      " << tests.func1_sink
+		  << std::endl
+		  << "	func 2 sink:                      " << tests.func2_sink
+		  << std::endl
+		  << "	func 1 evaluated at " << end << ":    " << f1(end)
+		  << std::endl
+		  << "	func 2 evaluated at " << end << ":    " << f2(end)
+		  << std::endl
+		  << "	func 1 evaluated at " << start << ":            "
+		  << f1(start) << std::endl
+		  << "	func 2 evaluated at " << start << ":            "
+		  << f2(start) << std::endl;
 }
 
 void test_quadratic()
 {
 
-    Quadratic quad1(5, 4, 2);
-    Quadratic quad2(0.4, 9, -10);
+	Quadratic quad1(5, 4, 2);
+	Quadratic quad2(0.4, 9, -10);
 
-    std::cout
-    << "quadratic #1 info:"                                                              << std::endl 
-    << "    " << quad1.display()                                                         << std::endl
-    << "    first solution:   "     << quad1.solutions[0]                                << std::endl 
-    << "    second solution:  "     << quad1.solutions[1]                                << std::endl << std::endl
-    << "    vertex x:         "     << quad1.vertex().x                                  << std::endl
-    << "    vertex y:         "     << quad1.vertex().y                                  << std::endl << std::endl
-    << "    y-intercept:      "     << quad1.y_intercept()                               << std::endl << std::endl << std::endl
-    << "quadratic #2 info:"                                                              << std::endl 
-    << "    " << quad2.display()                                                         << std::endl
-    << "    first solution:   "     << quad2.solutions[0]                                << std::endl 
-    << "    second solution:  "     << quad2.solutions[1]                                << std::endl << std::endl
-    << "    vertex x:         "     << quad2.vertex().x                                  << std::endl
-    << "    vertex y:         "     << quad2.vertex().y                                  << std::endl << std::endl
-    << "    y-intercept:      "     << quad2.y_intercept()                               << std::endl << std::endl << std::endl;
+	std::cout << "quadratic #1 info:" << std::endl
+		  << "    " << quad1.display() << std::endl
+		  << "    first solution:   " << quad1.roots[0] << std::endl
+		  << "    second solution:  " << quad1.roots[1] << std::endl
+		  << std::endl
+		  << "    vertex x:         " << quad1.vertex().x << std::endl
+		  << "    vertex y:         " << quad1.vertex().y << std::endl
+		  << std::endl
+		  << "    y-intercept:      " << quad1.y_intercept()
+		  << std::endl
+		  << std::endl
+		  << std::endl
+		  << "quadratic #2 info:" << std::endl
+		  << "    " << quad2.display() << std::endl
+		  << "    first solution:   " << quad2.roots[0] << std::endl
+		  << "    second solution:  " << quad2.roots[1] << std::endl
+		  << std::endl
+		  << "    vertex x:         " << quad2.vertex().x << std::endl
+		  << "    vertex y:         " << quad2.vertex().y << std::endl
+		  << std::endl
+		  << "    y-intercept:      " << quad2.y_intercept()
+		  << std::endl
+		  << std::endl
+		  << std::endl;
 }
 
 void test_linear()
 {
-    Linear l1(5, 9);
-    Linear l2(0.2, constants::E);
+	Linear l1(5, 9);
+	Linear l2(0.2, constants::E);
 
-    std::cout
-    << "linear #1 info:   "                                                           << std::endl 
-    << "    " << l1.display()                                                         << std::endl
-    << "    x-intercept:      "     << l1.x_intercept()                               << std::endl 
-    << "    y-intercept:      "     << l1.y_intercept()                               << std::endl << std::endl << std::endl
-    << "linear #2 info:   "                                                           << std::endl 
-    << "    " << l2.display()                                                         << std::endl
-    << "    x-intercept:      "     << l2.x_intercept()                               << std::endl 
-    << "    y-intercept:      "     << l2.y_intercept()                               << std::endl << std::endl << std::endl
-    << "solution for equation " << l1.display() << " = " << l2.display() << ": "      << std::endl
-    << "    x = "  << solve_linear(l1, l2)                                            << std::endl;
-
+	std::cout << "linear #1 info:   " << std::endl
+		  << "    " << l1.display() << std::endl
+		  << "    x-intercept:      " << l1.x_intercept() << std::endl
+		  << "    y-intercept:      " << l1.y_intercept() << std::endl
+		  << std::endl
+		  << std::endl
+		  << "linear #2 info:   " << std::endl
+		  << "    " << l2.display() << std::endl
+		  << "    x-intercept:      " << l2.x_intercept() << std::endl
+		  << "    y-intercept:      " << l2.y_intercept() << std::endl
+		  << std::endl
+		  << std::endl
+		  << "solution for equation " << l1.display() << " = "
+		  << l2.display() << ": " << std::endl
+		  << "    x = " << solve_linear(l1, l2) << std::endl;
 }
 
 int main()
 {
-    Timer t;
-    test_quadratic();
-    test_linear();
-
-    std::cout << "program executed in " << t.elapsed() << "s";
-    return 0;
+	auto f = [](real x) {return std::log(x);};
+	auto f2 = [](real x) {return Logarithm::log(x);};
+	test(f2, "custom log", f, "libm log");
 }

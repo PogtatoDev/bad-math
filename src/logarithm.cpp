@@ -4,6 +4,7 @@
 #include "../include/constants.hpp"
 #include "../include/expo.hpp"
 #include "../include/lookup/log_table.hpp"
+#include "../include/calculus.hpp"
 #include <limits>
 
 
@@ -40,6 +41,28 @@ namespace Logarithm
 		}
 
 		return y + k * constants::LOG2;
+	}
+
+	real poly_log(real x, real iter)
+	{
+		if (x < 0)
+			return std::numeric_limits<real>::quiet_NaN();
+		if (General::tol(x))
+			return -std::numeric_limits<real>::infinity();
+
+		if (General::is_int(x) && x < 511)
+		{
+			int n = static_cast<int>(x);
+			return log_table[n];
+		}
+			
+		int k;
+		real m = frexp(x, &k);
+
+		auto f = [m]( int t )
+		{ return General::int_pow(1-m, t)/t; };
+
+		return -Calculus::sum(f, 1, iter) + k * constants::LOG2;
 	}
 
 	real alt_log(real x)
