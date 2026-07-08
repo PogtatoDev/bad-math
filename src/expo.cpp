@@ -3,7 +3,6 @@
 #include "../include/constants.hpp"
 #include "../include/general.hpp"
 #include "../include/lookup/exp_table.hpp"
-#include "../include/lookup/exp2_table.hpp"
 #include <cmath>
 #include <limits>
 #include <bit>
@@ -12,6 +11,7 @@ namespace Expo
 {
 	real alt_exp(real x)
 	{
+		bool st0 = false;
 		if (x < -710) return 0;
 		if (x > 710) return std::numeric_limits<real>::infinity();
 		if (std::isnan(x)) return x;
@@ -24,7 +24,7 @@ namespace Expo
 
 
 		if (x < 0)
-			return 1.0L / exp(-x);
+			st0 = true;
 
 		int k = std::floor(x / constants::LOG2);
 		real r = x - (k * constants::LOG2);
@@ -41,6 +41,9 @@ namespace Expo
 				break;
 		}
 
+		if (st0)
+			return 1.0 / General::ldexp(sum, k);
+		
 		return General::ldexp(sum, k);
 	}
 

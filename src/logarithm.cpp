@@ -4,13 +4,12 @@
 #include "../include/constants.hpp"
 #include "../include/expo.hpp"
 #include "../include/lookup/log_table.hpp"
-#include "../include/calculus.hpp"
 #include <limits>
 
 
 namespace Logarithm
 {
-	real log(real x, real eps)
+	real halley_log(real x, real eps)
 	{
 		if (x < 0)
 			return std::numeric_limits<real>::quiet_NaN();
@@ -43,26 +42,44 @@ namespace Logarithm
 		return y + k * constants::LOG2;
 	}
 
-	real poly_log(real x, real iter)
+	real log(real x)
 	{
+		int st1 = 1;
 		if (x < 0)
 			return std::numeric_limits<real>::quiet_NaN();
+
+		if (x < 1)
+		{
+			x = 1.0 / x;
+			st1 = -1;
+		}
 		if (General::tol(x))
 			return -std::numeric_limits<real>::infinity();
 
-		if (General::is_int(x) && x < 511)
+		if (General::is_int(x) && x < 1024)
 		{
-			int n = static_cast<int>(x);
-			return log_table[n];
+			int n = round(x);
+			return st1 * log_table[n];
 		}
 			
 		int k;
 		real m = frexp(x, &k);
+		real constants[11] = {
+			0.1,
+			1.1111111111111111,
+			5.625,
+			17.142857142857142,
+			35,
+			50.4,
+			52.5,
+			40,
+			22.5,
+			10,
+			2.9289682539682538
+		};
 
-		auto f = [m]( int t )
-		{ return General::int_pow(1-m, t)/t; };
-
-		return -Calculus::sum(f, 1, iter) + k * constants::LOG2;
+		real p = -(m*(m*(m*(m*(m*(m*(m*(m*(m*(m * constants[0] - constants[1]) + constants[2]) - constants[3]) + constants[4]) - constants[5]) + constants[6]) - constants[7]) + constants[8]) - constants[9]) + constants[10]);
+		return st1 * (p + k * constants::LOG2);
 	}
 
 	real alt_log(real x)

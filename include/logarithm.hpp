@@ -4,9 +4,9 @@
 
 namespace Logarithm
 {
-    real log(real x, real eps = 0.001);
+    real log(real x);
     real alt_log(real x);
-    real poly_log(real x, real iter);
+    real halley_log(real x, real eps = 0.001);
     real bisection_log(real x);
     real newton_log(real x);
     real log_base(real x);

@@ -55,7 +55,9 @@ Benchmark bench(Func1 func1, Func2 func2, real start, real end,
 	sink = 0;
 	for (real i = start; i < end; i += increment)
 	{
+
 		sink += General::abs(func1(i) - func2(i)) / func1(i);
+
 	}
 	temp.ehhhror = sink;
 	t.reset();
@@ -84,9 +86,9 @@ Benchmark bench(Func1 func1, Func2 func2, real start, real end,
 template <typename Func1, typename Func2>
 void test(Func1 f1, std::string name1, Func2 f2, std::string name2)
 {
-	const real start = 1;
-	const real end = 100000000;
-	const real increment = 0.2;
+	const real start = 2;
+	const real end = 10000000;
+	const real increment = 1;
 	Benchmark tests = bench(f1, f2, start, end, increment);
 
 	std::cout << "test results for " << name1 << " (func1) vs " << name2 << " (func2) from " << start << " to " << end
@@ -105,9 +107,9 @@ void test(Func1 f1, std::string name1, Func2 f2, std::string name2)
 		  << std::endl
 		  << "	func 2 sink:                      " << tests.func2_sink
 		  << std::endl
-		  << "	func 1 evaluated at " << end << ":    " << f1(end)
+		  << "	func 1 evaluated at " << end << ":        " << f1(end)
 		  << std::endl
-		  << "	func 2 evaluated at " << end << ":    " << f2(end)
+		  << "	func 2 evaluated at " << end << ":        " << f2(end)
 		  << std::endl
 		  << "	func 1 evaluated at " << start << ":            "
 		  << f1(start) << std::endl
@@ -171,7 +173,10 @@ void test_linear()
 
 int main()
 {
-	auto f = [](real x) {return std::log(x);};
-	auto f2 = [](real x) {return Logarithm::log(x);};
-	test(f2, "custom log", f, "libm log");
+	for (double x : {0.5, 0.75, 0.999999, 1.0, 2.0, 1000.0})
+	{
+		std::cout << x << " "
+				<< Logarithm::log(x)
+				<< "\n";
+	}
 }
