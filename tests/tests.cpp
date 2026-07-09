@@ -87,7 +87,7 @@ template <typename Func1, typename Func2>
 void test(Func1 f1, std::string name1, Func2 f2, std::string name2)
 {
 	const real start = 2;
-	const real end = 10000000;
+	const real end = 1e5;
 	const real increment = 1;
 	Benchmark tests = bench(f1, f2, start, end, increment);
 
@@ -173,10 +173,7 @@ void test_linear()
 
 int main()
 {
-	for (double x : {0.5, 0.75, 0.999999, 1.0, 2.0, 1000.0})
-	{
-		std::cout << x << " "
-				<< Logarithm::log(x)
-				<< "\n";
-	}
+	auto f1 = [](real x) { return Logarithm::log(x); };
+	auto f2 = [](real x) { return std::log(x); };
+	test(f1, "custom log", f2, "std::log");
 }

@@ -48,22 +48,18 @@ namespace Logarithm
 		if (x < 0)
 			return std::numeric_limits<real>::quiet_NaN();
 
+		if (General::tol(x))
+			return -std::numeric_limits<real>::infinity();
+		
 		if (x < 1)
 		{
 			x = 1.0 / x;
 			st1 = -1;
 		}
-		if (General::tol(x))
-			return -std::numeric_limits<real>::infinity();
 
-		if (General::is_int(x) && x < 1024)
-		{
-			int n = round(x);
-			return st1 * log_table[n];
-		}
 			
 		int k;
-		real m = frexp(x, &k);
+		real m = General::frexp(x, k);
 		real constants[11] = {
 			0.1,
 			1.1111111111111111,
