@@ -44,38 +44,33 @@ namespace Logarithm
 
 	real log(real x)
 	{
-		int st1 = 1;
+		bool st1 = x < 1;
 		if (x < 0)
 			return std::numeric_limits<real>::quiet_NaN();
 
 		if (General::tol(x))
 			return -std::numeric_limits<real>::infinity();
-		
-		if (x < 1)
+
+		x = st1 ? 1.0/x : x;
+
+		if (General::is_int(x) && x < 1024)
 		{
-			x = 1.0 / x;
-			st1 = -1;
+			int n = round(x);
+			return st1 ? -log_table[n] : log_table[n];
 		}
 
-			
+		
 		int k;
 		real m = General::frexp(x, k);
-		real constants[11] = {
-			0.1,
-			1.1111111111111111,
-			5.625,
-			17.142857142857142,
-			35,
-			50.4,
-			52.5,
-			40,
-			22.5,
-			10,
-			2.9289682539682538
-		};
 
-		real p = -(m*(m*(m*(m*(m*(m*(m*(m*(m*(m * constants[0] - constants[1]) + constants[2]) - constants[3]) + constants[4]) - constants[5]) + constants[6]) - constants[7]) + constants[8]) - constants[9]) + constants[10]);
-		return st1 * (p + k * constants::LOG2);
+		if (m < constants::SQRT2_2)
+		{
+			m *= 2;
+			k -= 1;
+		}
+
+		real p = m*(m*(m*(m*(m*(m*(m*(0.911814655241915 - 0.0942006339486538*m) - 3.91823414464795) + 9.83610862396699) - 15.9761942733761) + 17.6034271483863) - 13.5511837975087) + 7.89662754645609) - 2.70816511790814;
+		return st1 ? -(p + k * constants::LOG2) : (p + k * constants::LOG2);
 	}
 
 	real alt_log(real x)
