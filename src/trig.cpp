@@ -5,7 +5,6 @@
 
 #include <cmath>
 
-
 namespace Trig
 {
 	real alt_sin(real x)
@@ -13,7 +12,6 @@ namespace Trig
 		x = std::fmod(x, constants::TAU);
 		x = General::min(x, constants::PI - x);
 		x = General::max(x, -constants::PI - x);
-		x = General::min(x, constants::PI - x);
 
 		real term = x;
 		real approx = x;
@@ -34,10 +32,16 @@ namespace Trig
 		x = General::min(x, constants::PI - x);
 		x = General::max(x, -constants::PI - x);
 		x = General::min(x, constants::PI - x);
-		
-		real x1 = x;
-		real x2 = x * x;
-		real approx = x1*(0.999999994686007336752316120259640318 + x2*(-0.166666566840071513590695269999128453 + x2*(0.00833302513896936729848481553136180314 + x2*(-0.000198074187274269708745741141088641071 + 2.60190306765146018582500885337773154e-6*x2))));
+
+		real approx =
+		    x *
+		    (0.999998916406210 +
+			x * x *
+			(-0.166657545310621 +
+			x * x *
+			(0.00831484997047385 +
+			x * x *
+			(-0.000185704496035501))));
 		return approx;
 	}
 

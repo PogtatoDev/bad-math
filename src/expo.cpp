@@ -59,9 +59,7 @@ namespace Expo
 			return std::numeric_limits<real>::infinity();
 		if (x != x)
 			return x;
-
-		int N = 1;
-
+		
 		if (General::is_int(x) && General::abs(x) < 710)
 		{
 			int n = static_cast<int>(x);

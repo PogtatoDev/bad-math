@@ -22,7 +22,7 @@ namespace Roots
 
 		if (General::is_int(x) && x < 2048)
 		{
-			int n = static_cast<int>(x);
+			int n = round(x);
 			return sqrt_table[n];
 		}
 

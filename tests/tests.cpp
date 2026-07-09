@@ -173,7 +173,7 @@ void test_linear()
 
 int main()
 {
-	auto f = [](real x) {return std::log(x);};
-	auto f2 = [](real x) {return Logarithm::log(x);};
-	test(f, "libm log", f2, "custom log");
+	auto f = [](real x) {return std::sin(x);};
+	auto f2 = [](real x) {return Trig::sin(x);};
+	test(f, "libm sin", f2, "custom sin");
 }
