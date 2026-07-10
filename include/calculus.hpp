@@ -2,7 +2,6 @@
 
 #include "constants.hpp"
 #include "general.hpp"
-#include <functional>
 
 namespace Calculus
 {
@@ -53,7 +52,7 @@ namespace Calculus
 
 				sign *= -1;
 
-				if (General::abs(term) < const_limits::LIM_EPS)
+				if (std::abs(term) < const_limits::LIM_EPS)
 					break;
 
 			}
@@ -67,7 +66,7 @@ namespace Calculus
 		{
 			term = f(k);
 			sum += term;
-			if (General::abs(term) < const_limits::LIM_EPS)
+			if (std::abs(term) < const_limits::LIM_EPS)
 				break;
 		}
 
@@ -112,7 +111,7 @@ namespace Calculus
 		return approx * h / 3.0;
 	}
 
-	template <typename Func> auto derivative(Func f, real eps = 0.000001)
+	template <typename Func> auto derivative(Func f, real eps = const_limits::LIM_EPS)
 	{
 		auto Df = [f, eps](real x)
 	    { return (f(x + eps) - f(x - eps)) / (2 * eps); };
@@ -120,22 +119,13 @@ namespace Calculus
 		return Df;
 	}
 
-	template <typename Func> real derivative_at(Func f, real x, real eps = 0.000001)
+	template <typename Func> real derivative_at(Func f, real x, real eps = const_limits::LIM_EPS)
 	{
-		const real h = const_limits::LIM_EPS;
-		return (f(x + h) - f(x - h)) / (2 * h);
+		return (f(x + eps) - f(x - eps)) / (2 * eps);
 	}
 
 	template <typename Func> real average(Func f, real start, real end)
 	{
 		return simpson_integral(f, start, end) / (end - start);
-	}
-
-	template <typename Func> auto taylor_polynomial(Func f, int degree)
-	{
-		auto taylor_f = []( real t ) 
-		{ return t + 1; };
-
-		return f;
 	}
 };

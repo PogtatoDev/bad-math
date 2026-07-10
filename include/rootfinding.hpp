@@ -1,15 +1,17 @@
 #pragma once
 #include "calculus.hpp"
-#include "general.hpp"
 #include "constants.hpp"
+#include "general.hpp"
 #include <limits>
+
 
 namespace RootFinding
 {
 	template <typename Func, typename dFunc>
-	real manual_newton(Func f, dFunc Df, real guess, real eps = 0.001, int term_cap = 500)
+	real manual_newton(Func f, dFunc Df, real guess, real eps = 0.001,
+			   int term_cap = 500)
 	{
-		if (General::abs(Df(guess)) < 0.01)
+		if (std::abs(Df(guess)) < 0.01)
 			guess++;
 
 		real next, old = 0;
@@ -17,7 +19,8 @@ namespace RootFinding
 		for (int i = 0; i < term_cap; i++)
 		{
 			next = old - f(old) / Df(old);
-			if (General::abs(next - old) < eps || General::abs(f(next)) < eps)
+			if (std::abs(next - old) < eps ||
+			    std::abs(f(next)) < eps)
 				break;
 
 			old = next;
@@ -26,10 +29,12 @@ namespace RootFinding
 		return next;
 	}
 
-	template <typename Func> real auto_newton(Func f, real guess, real eps = 0.00001, int term_cap = 500)
+	template <typename Func>
+	real auto_newton(Func f, real guess, real eps = const_limits::LIM_EPS,
+			 int term_cap = 500)
 	{
 		auto Df = Calculus::derivative(f, eps);
-		if (General::abs(Df(guess)) < 0.01)
+		if (std::abs(Df(guess)) < 0.01)
 			guess++;
 
 		real next, old = 0;
@@ -37,7 +42,8 @@ namespace RootFinding
 		for (int i = 0; i < term_cap; i++)
 		{
 			next = old - f(old) / Df(old);
-			if (General::abs(next - old) < eps || General::abs(f(next)) < eps)
+			if (std::abs(next - old) < eps ||
+			    std::abs(f(next)) < eps)
 				break;
 			old = next;
 		}
@@ -46,76 +52,90 @@ namespace RootFinding
 	}
 
 	template <typename Func>
-	real manual_bisection_method(Func f, real a, real b, real eps = 0.01, int term_cap = 5000)
+	real manual_bisection_method(Func f, real a, real b, real eps = 0.01)
 	{
 		if (f(a) * f(b) > 0)
 			return std::numeric_limits<real>::quiet_NaN();
 
+		real fa = f(a);
 		real c = a;
-		int i = 0;
 		while ((b - a) >= eps)
 		{
-			if (i > term_cap)
+			real c = (a + b) * 0.5;
+			real fc = f(c);
+
+			if (General::abs(fc) < eps)
 				break;
 
-			c = (a + b) / 2.0;
-			if (General::abs(f(c)) < eps)
-				break;
-			if (f(c) * f(a) < 0)
+			if (fa * fc < 0)
+			{
 				b = c;
+			}
 			else
+			{
 				a = c;
-			i++;
+				fa = fc;
+			}
 		}
 
 		return c;
 	}
 
 	template <typename Func>
-	real auto_bisection_method(Func f, real eps = 0.0001)
+	real auto_bisection_method(Func f, real eps = const_limits::LIM_EPS)
 	{
 		real a = 0;
 		real b = 0;
-		int i = 1;
-		while (f(a) * f(b) > 0)
-		{
-			a *= 2;
-			b *= 2;
 
-			i++;
-			if (i < 10000)
-				return std::numeric_limits<real>::quiet_NaN();
+		for (int i = 0; i < 10000; ++i)
+		{
+			if (f(a) * f(b) <= 0)
+				break;
+
+			a -= 1;
+			b += 1;
 		}
+
+		real fa = f(a);
+
 		real c = a;
 
 		while ((b - a) >= eps)
 		{
-			c = (a + b) / 2.0;
-			if (f(c) == 0.0)
-				break;
-			if (f(c) * f(a) < 0)
+			real fc = f(c);
+
+			if (General::tol(fc, eps))
+				return c;
+
+			if (fa * fc < 0)
+			{
 				b = c;
+			}
 			else
+			{
 				a = c;
+				fa = fc;
+			}
 		}
 
 		return c;
 	}
 
 	template <typename Func>
-	real secant_method(Func f, real x0, real x1, real eps = 0.001, int term_cap = 500)
+	real secant_method(Func f, real x0, real x1, real eps = 0.001,
+			   int term_cap = 500)
 	{
 		for (int i = 0; i < term_cap; i++)
 		{
 			real f0 = f(x0);
 			real f1 = f(x1);
-			real x = x1 - ((f1*(x0-x1))/(f0 - f1));
+			real x = x1 - ((f1 * (x0 - x1)) / (f0 - f1));
 
-			if (General::abs(x-x1) < eps)
+			if (std::abs(x - x1) < eps)
 				break;
 
 			x0 = x1;
-        	x1 = x;
+			x1 = x;
 		}
 
 		return x1;

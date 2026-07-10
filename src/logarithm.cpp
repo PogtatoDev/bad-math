@@ -103,7 +103,7 @@ namespace Logarithm
 		return y + k * constants::LOG2;
 	}
 
-	real bisection_log(real x, real bisection_acc = 0.01)
+	real bisection_log(real x, real bisection_acc = const_limits::LIM_EPS)
 	{
 		if (x < 0)
 			return std::numeric_limits<real>::quiet_NaN();

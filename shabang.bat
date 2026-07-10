@@ -1,1 +1,0 @@
-make clean_bin && make && cd tests && tests.out && cd..

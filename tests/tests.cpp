@@ -1,7 +1,7 @@
-#include "../include/full_lib.hpp"
 #include "../include/linear.hpp"
-#include "../include/logarithm.hpp"
+#include "../include/quadratic.hpp"
 #include <chrono>
+#include "../include/invtrig.hpp"
 #include <cmath>
 #include <complex>
 #include <iostream>
@@ -38,15 +38,14 @@ class Timer
 };
 
 template <typename Func1, typename Func2>
-Benchmark bench(Func1 func1, Func2 func2, real start, real end,
-		real increment)
+Benchmark bench(Func1 func1, Func2 func2, real start, real end, real increment)
 {
 	real sink = 0;
 	Timer t;
 
 	for (real i = start; i < end; i += increment)
 	{
-		sink += General::abs(func1(i) - func2(i));
+		sink += std::abs(func1(i) - func2(i));
 	}
 
 	Benchmark temp;
@@ -56,8 +55,7 @@ Benchmark bench(Func1 func1, Func2 func2, real start, real end,
 	for (real i = start; i < end; i += increment)
 	{
 
-		sink += General::abs(func1(i) - func2(i)) / func1(i);
-
+		sink += std::abs(func1(i) - func2(i)) / func1(i);
 	}
 	temp.ehhhror = sink;
 	t.reset();
@@ -91,7 +89,8 @@ void test(Func1 f1, std::string name1, Func2 f2, std::string name2)
 	const real increment = 1;
 	Benchmark tests = bench(f1, f2, start, end, increment);
 
-	std::cout << "test results for " << name1 << " (func1) vs " << name2 << " (func2) from " << start << " to " << end
+	std::cout << "test results for " << name1 << " (func1) vs " << name2
+		  << " (func2) from " << start << " to " << end
 		  << " with increment " << increment << std::endl
 		  << "	full time taken:                  " << tests.full_time
 		  << std::endl
@@ -173,7 +172,7 @@ void test_linear()
 
 int main()
 {
-	auto f = [](real x) {return std::sin(x);};
-	auto f2 = [](real x) {return Trig::sin(x);};
-	test(f, "libm sin", f2, "custom sin");
+	auto f1 = [](real x){return InvTrig::atan(x);};
+	auto f2 = [](real x){return std::atan(x);};
+	test(f1, "custom arctan", f2, "libm arctan");
 }

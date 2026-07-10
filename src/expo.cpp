@@ -39,18 +39,14 @@ namespace Expo
 			term *= r / i;
 			sum += term;
 
-			if (General::abs(term) <
-			    const_limits::LIM_EPS * General::abs(sum))
+			if (std::abs(term) <
+			    const_limits::LIM_EPS * std::abs(sum))
 				break;
 		}
 
-		if (st0)
-			return 1.0 / General::ldexp(sum, k);
-
-		return General::ldexp(sum, k);
+		return st0 ? 1.0 / General::ldexp(sum, k) : General::ldexp(sum, k);
 	}
 
-	// TODO: fix this bullshit
 	real exp(real x)
 	{
 		if (x < -710)
@@ -59,8 +55,8 @@ namespace Expo
 			return std::numeric_limits<real>::infinity();
 		if (x != x)
 			return x;
-		
-		if (General::is_int(x) && General::abs(x) < 710)
+
+		if (General::is_int(x) && std::abs(x) < 710)
 		{
 			int n = static_cast<int>(x);
 			return exp_table[n + 710];
@@ -69,11 +65,12 @@ namespace Expo
 		if (x < 0)
 			return 1.0 / exp(-x);
 
-		int n = round(x * constants::INV_LOG2);
-		real f = x - n * constants::LOG2;
+		int k = round(x * constants::INV_LOG2);
+		real r = x - k * constants::LOG2;
 
 		real p =
-		    f * (f * (f * (f * (f * (f * (f * (2.50726499359848e-5 * f +
+		    r * (r * (r * (r * (r * (r * (r * (
+				2.50726499359848e-5 * r +
 				0.00020097762801442) +
 	     	    0.00138880322459888) +
 			    0.00833259882407862) +
@@ -83,7 +80,7 @@ namespace Expo
 			    0.999999998355752) +
 		    	1.00000000000182;
 
-		return General::ldexp(p, n);
+		return General::ldexp(p, k);
 	}
 
 	real fast_exp(real x)

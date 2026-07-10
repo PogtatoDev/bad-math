@@ -41,7 +41,7 @@ namespace Roots
 		return General::ldexp(y, k / 2);
 	}
 
-	real bisection_sqrt(real x, real eps = 0.01)
+	real bisection_sqrt(real x, real eps)
 	{
 		if (x < 0)
 			return std::numeric_limits<real>::quiet_NaN();
@@ -81,10 +81,10 @@ namespace Roots
 		return RootFinding::manual_newton(f, Df, guess);
 	}
 
-	real bisection_nth_root(real x, int n, real acc = 0.01)
+	real bisection_nth_root(real x, int n, real eps)
 	{
 		auto f = [x, n](real t) { return General::int_pow(t, n) - x; };
 
-		return RootFinding::auto_bisection_method(f, acc);
+		return RootFinding::auto_bisection_method(f, eps);
 	}
 } // namespace Roots

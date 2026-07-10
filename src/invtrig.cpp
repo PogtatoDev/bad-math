@@ -11,7 +11,7 @@ namespace InvTrig
 {
 	real asin(real x)
 	{
-		if (General::abs(x) > 1)
+		if (std::abs(x) > 1)
 		{
 			return std::numeric_limits<real>::quiet_NaN();
 		}
@@ -31,32 +31,27 @@ namespace InvTrig
 
 	real atan(real x)
 	{
+		constexpr real A = 0.0776509570923569;
+		constexpr real B = -0.287434475393028;
+		constexpr real C = (constants::PI_4 - A - B);
+
+		bool st1 = (x < -1);
+		bool bt1 = (x > 1);
+		
 		if (General::tol(x))
     		return 0;
 
-		if (General::tol(x-1) || General::tol(x+1))
-			return x * constants::PI_4;
+		if (bt1 || st1)
+			x = 1.0 / x;
 
-		if (x > 1)
-			return constants::PI_2 - atan(1.0 / x);
-		if (x < -1)
-			return -constants::PI_2 - atan(1.0 / x);
+		real x2 = x*x;
+		real p = ((A*x2 + B)*x2 + C)*x;
 
-		real term = x;
-		real sum = x;
-		real x2 = x * x;
-
-		for (int i = 1; i < 50; i++)
-		{
-			term *= -x2;
-			real add = term / (2 * i + 1);
-			sum += add;
-
-			if (General::tol(add))
-				break;
-		}
-
-		return sum;
+		if (bt1)
+			return constants::PI_2 - p;
+		if (st1)
+			return -constants::PI_2 - p;
+		return p;
 	}
 
 	real asec(real x)
@@ -87,7 +82,7 @@ namespace InvTrig
 			return ((a*t2 + b)*t2 + c)*t;
 		};
 
-		if (General::abs(x) < 1) 
+		if (std::abs(x) < 1) 
 			return f(x);
 		if (x > 1)
 			return constants::PI_2 - f(1.0 / x);
@@ -99,7 +94,7 @@ namespace InvTrig
 
 	real fast_asin(real x)
 	{
-		if (General::abs(x) > 1)
+		if (std::abs(x) > 1)
 			return std::numeric_limits<real>::quiet_NaN();
 
 		if (x == 1)

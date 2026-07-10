@@ -18,7 +18,7 @@ namespace InvHypTrig
 
 	real atanh(real x)
 	{
-		if (General::abs(x) >= 1)
+		if (std::abs(x) >= 1)
 			return std::numeric_limits<real>::quiet_NaN();
 		const real t = (1 + x) / (1 - x);
 		return 0.5 * Logarithm::log(t);
@@ -35,7 +35,7 @@ namespace InvHypTrig
 
 	real acoth(real x)
 	{
-		if (General::abs(x) <= 1)
+		if (std::abs(x) <= 1)
 			return std::numeric_limits<real>::quiet_NaN();
 		const real t = (x + 1) / (x - 1);
 		return 0.5 * Logarithm::log(t);

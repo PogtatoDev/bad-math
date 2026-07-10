@@ -20,7 +20,7 @@ namespace Trig
 			term *= -x * x / ((2.0 * i) * (2.0 * i + 1));
 			approx += term;
 
-			if (General::abs(term) < const_limits::LIM_EPS)
+			if (std::abs(term) < const_limits::LIM_EPS)
 				break;
 		}
 		return approx;
@@ -32,15 +32,15 @@ namespace Trig
 		x = General::min(x, constants::PI - x);
 		x = General::max(x, -constants::PI - x);
 		x = General::min(x, constants::PI - x);
-
+		real x2 = x*x;
 		real approx =
 		    x *
 		    (0.999998916406210 +
-			x * x *
+			x2 *
 			(-0.166657545310621 +
-			x * x *
+			x2 *
 			(0.00831484997047385 +
-			x * x *
+			x2 *
 			(-0.000185704496035501))));
 		return approx;
 	}

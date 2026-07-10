@@ -16,7 +16,7 @@ namespace HypTrig
 	real cosh(real x)
 	{
 		real expx = e::exp(x);
-		return (e::exp(x) + 1.0 / expx) / 2.0;
+		return (expx + 1.0 / expx) / 2.0;
 	}
 
 	real tanh(real x)
