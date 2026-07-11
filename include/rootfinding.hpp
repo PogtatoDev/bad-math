@@ -4,15 +4,14 @@
 #include "general.hpp"
 #include <limits>
 
-
 namespace RootFinding
 {
 	template <typename Func, typename dFunc>
-	real manual_newton(Func f, dFunc Df, real guess, real eps = 0.001,
-			   int term_cap = 500)
+	real manual_newton(Func f, dFunc Df, real guess,
+			   real eps = const_limits::LIM_EPS, int term_cap = 500)
 	{
-		if (std::abs(Df(guess)) < 0.01)
-			guess++;
+		if (General::tol(Df(guess)))
+			return std::numeric_limits<real>::quiet_NaN();
 
 		real next, old = 0;
 		old = guess - f(guess) / Df(guess);
@@ -84,32 +83,34 @@ namespace RootFinding
 	template <typename Func>
 	real auto_bisection_method(Func f, real eps = const_limits::LIM_EPS)
 	{
-		real a = 0;
-		real b = 0;
-
-		for (int i = 0; i < 10000; ++i)
-		{
-			if (f(a) * f(b) <= 0)
-				break;
-
-			a -= 1;
-			b += 1;
-		}
+		real a = -1;
+		real b = 1;
 
 		real fa = f(a);
+		real fb = f(b);
 
-		real c = a;
-
-		while ((b - a) >= eps)
+		while(fa * fb > 0)
 		{
+			a += a;
+			b += b;
+
+			fa = f(a);
+			fb = f(b);
+		}
+
+
+		while ((b - a) > eps)
+		{
+			real c = (a + b) / 2;
 			real fc = f(c);
 
-			if (General::tol(fc, eps))
+			if (std::abs(fc) < eps)
 				return c;
 
 			if (fa * fc < 0)
 			{
 				b = c;
+				fb = fc;
 			}
 			else
 			{
@@ -118,7 +119,7 @@ namespace RootFinding
 			}
 		}
 
-		return c;
+		return (a + b) / 2;
 	}
 
 	template <typename Func>

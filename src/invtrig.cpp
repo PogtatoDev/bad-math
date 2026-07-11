@@ -67,31 +67,6 @@ namespace InvTrig
 		return atan(1.0 / x);
 	}
 
-	real fast_atan(real x)
-	{
-		if (x == 1 || x == -1)
-			return x * constants::PI_4;
-
-		const real a = 0.0776509570923569;
-		const real b = -0.287434475393028;
-		const real c = constants::PI_4 - a - b;
-
-		auto f = [a, b, c](real t)
-		{ 
-			real t2 = t * t;
-			return ((a*t2 + b)*t2 + c)*t;
-		};
-
-		if (std::abs(x) < 1) 
-			return f(x);
-		if (x > 1)
-			return constants::PI_2 - f(1.0 / x);
-		if (x < -1)
-			return -constants::PI_2 - f(1.0 / x);
-
-		return std::numeric_limits<real>::quiet_NaN();
-	}
-
 	real fast_asin(real x)
 	{
 		if (std::abs(x) > 1)
@@ -103,6 +78,6 @@ namespace InvTrig
 		if (x == -1)
 			return -constants::PI_2;
 		
-		return fast_atan(x / Roots::sqrt(1 - x*x));
+		return atan(x / Roots::sqrt(1 - x*x));
 	}
 }; // namespace InvTrig

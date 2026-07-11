@@ -1,7 +1,7 @@
 #include "../include/linear.hpp"
 #include "../include/quadratic.hpp"
 #include <chrono>
-#include "../include/invtrig.hpp"
+#include "../include/roots.hpp"
 #include <cmath>
 #include <complex>
 #include <iostream>
@@ -85,7 +85,7 @@ template <typename Func1, typename Func2>
 void test(Func1 f1, std::string name1, Func2 f2, std::string name2)
 {
 	const real start = 2;
-	const real end = 1e7;
+	const real end = 1000;
 	const real increment = 1;
 	Benchmark tests = bench(f1, f2, start, end, increment);
 
@@ -172,7 +172,7 @@ void test_linear()
 
 int main()
 {
-	auto f1 = [](real x){return InvTrig::atan(x);};
-	auto f2 = [](real x){return std::atan(x);};
+	auto f1 = [](real x){return Roots::bisection_nth_root(x, 30);};
+	auto f2 = [](real x){return std::pow(x, 1.0/30);};
 	test(f1, "custom arctan", f2, "libm arctan");
 }
