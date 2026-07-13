@@ -81,7 +81,7 @@ namespace RootFinding
 	}
 
 	template <typename Func>
-	real auto_bisection_method(Func f, real eps = const_limits::LIM_EPS)
+	[[deprecated]] real auto_bisection_method(Func f, real eps = const_limits::LIM_EPS)
 	{
 		real a = -1;
 		real b = 1;

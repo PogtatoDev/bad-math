@@ -84,8 +84,8 @@ Benchmark bench(Func1 func1, Func2 func2, real start, real end, real increment)
 template <typename Func1, typename Func2>
 void test(Func1 f1, std::string name1, Func2 f2, std::string name2)
 {
-	const real start = 2;
-	const real end = 1000;
+	const real start = 1;
+	const real end = 1e7;
 	const real increment = 1;
 	Benchmark tests = bench(f1, f2, start, end, increment);
 
@@ -172,7 +172,8 @@ void test_linear()
 
 int main()
 {
-	auto f1 = [](real x){return Roots::bisection_nth_root(x, 30);};
-	auto f2 = [](real x){return std::pow(x, 1.0/30);};
-	test(f1, "custom arctan", f2, "libm arctan");
+	for (int i = 1; i < 32; i++)
+	{
+		std::cout << Roots::sqrt(i) << " -- √(" << i << ")" << std::endl; 
+	}
 }

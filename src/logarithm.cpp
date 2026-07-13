@@ -86,7 +86,7 @@ namespace Logarithm
 		int k;
 		real m = frexp(x, &k);
 
-		real y = m - 1;
+		real y = k*constants::LOG2;
 		for (int i = 0; i < 8; i++)
 		{
 			real exp_y = Expo::alt_exp(y);
@@ -103,15 +103,6 @@ namespace Logarithm
 		return y + k * constants::LOG2;
 	}
 
-	real bisection_log(real x, real bisection_acc = const_limits::LIM_EPS)
-	{
-		if (x < 0)
-			return std::numeric_limits<real>::quiet_NaN();
-		auto f = [x](real t) { return Expo::exp(t) - x; };
-
-		return RootFinding::auto_bisection_method(f, bisection_acc);
-	}
-
 	real newton_log(real x)
 	{
 		if (x < 0)
@@ -121,8 +112,9 @@ namespace Logarithm
 
 		auto f = [x](real t) { return Expo::exp(t) - x; };
 		auto Df = [](real t) { return Expo::exp(t); };
-
-		int guess = General::log2_int(std::round(x));
+		int k;
+		General::frexp(x, k);
+		int guess = k*constants::LOG2;
 
 		return RootFinding::manual_newton(f, Df, guess);
 	}
@@ -131,6 +123,7 @@ namespace Logarithm
 	{
 		return Logarithm::log(x) / log(base);
 	}
+	
 	real log10(real x)
 	{
 		return log(x) / constants::LOG10;
