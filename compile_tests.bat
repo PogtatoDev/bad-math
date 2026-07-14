@@ -1,1 +1,1 @@
-make clean_bin && make && cd tests && tests.exe && cd.. && make clean_obj
+make clean_bin && make && cd tests && tests.exe && cd.. && make clean_obj && g
