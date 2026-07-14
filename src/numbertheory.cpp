@@ -1,8 +1,8 @@
 #include "../include/numbertheory.hpp"
 
 #include "../include/constants.hpp"
-#include "../include/roots.hpp"
 #include "../include/general.hpp"
+#include "../include/roots.hpp"
 
 namespace NumberTheory
 {
@@ -19,9 +19,7 @@ namespace NumberTheory
 	}
 
 	real termial(real x)
-	{
-		return x * (x + 1) / 2.0;
-	}
+	{ return x * (x + 1) / 2.0; }
 
 	std::vector<int> prime_factors(int n)
 	{

@@ -2,14 +2,14 @@
 
 #include "../include/constants.hpp"
 #include "../include/expo.hpp"
-#include "../include/roots.hpp"
-#include "../include/logarithm.hpp"
 #include "../include/general.hpp"
+#include "../include/logarithm.hpp"
+#include "../include/roots.hpp"
 
 namespace Powers
 {
-    namespace e = Expo;
-    namespace l = Logarithm;
+	namespace e = Expo;
+	namespace l = Logarithm;
 
 	real log_pow(real x, real y)
 	{

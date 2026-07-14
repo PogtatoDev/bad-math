@@ -9,7 +9,7 @@ BreakBeforeBraces: Allman
 NamespaceIndentation: All
 
 AllowShortFunctionsOnASingleLine: Inline
-AllowShortBlocksOnASingleLine: false
+AllowShortBlocksOnASingleLine: Always
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 

@@ -32,44 +32,27 @@ namespace Trig
 		x = General::min(x, constants::PI - x);
 		x = General::max(x, -constants::PI - x);
 		x = General::min(x, constants::PI - x);
-		real x2 = x*x;
-		real approx =
-		    x *
-		    (0.999998916406210 +
-			x2 *
-			(-0.166657545310621 +
-			x2 *
-			(0.00831484997047385 +
-			x2 *
-			(-0.000185704496035501))));
+		real x2 = x * x;
+		real approx = x * (0.999998916406210 +
+				   x2 * (-0.166657545310621 +
+					 x2 * (0.00831484997047385 +
+					       x2 * (-0.000185704496035501))));
 		return approx;
 	}
 
 	real cos(real x)
-	{
-		return sin(constants::PI_2 - x);
-	}
+	{ return sin(constants::PI_2 - x); }
 
 	real alt_cos(real x)
-	{
-		return alt_sin(constants::PI_2 - x);
-	}
+	{ return alt_sin(constants::PI_2 - x); }
 
 	real tan(real x)
-	{
-		return sin(x) / cos(x);
-	}
+	{ return sin(x) / cos(x); }
 
 	real sec(real x)
-	{
-		return 1.0 / cos(x);
-	}
+	{ return 1.0 / cos(x); }
 	real csc(real x)
-	{
-		return 1.0 / sin(x);
-	}
+	{ return 1.0 / sin(x); }
 	real cot(real x)
-	{
-		return 1.0 / tan(x);
-	}
+	{ return 1.0 / tan(x); }
 }; // namespace Trig

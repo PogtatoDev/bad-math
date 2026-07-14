@@ -1,31 +1,29 @@
-#include "../include/complexmath.hpp" 
- 
-#include "../include/constants.hpp" 
-#include "../include/expo.hpp" 
-#include "../include/special.hpp" 
-#include "../include/trig.hpp" 
-#include "../include/logarithm.hpp" 
-#include "../include/general.hpp" 
-#include "../include/roots.hpp" 
-#include <limits> 
+#include "../include/complexmath.hpp"
+
+#include "../include/constants.hpp"
+#include "../include/expo.hpp"
+#include "../include/general.hpp"
+#include "../include/logarithm.hpp"
+#include "../include/roots.hpp"
+#include "../include/special.hpp"
+#include "../include/trig.hpp"
+#include <limits>
 
 namespace ComplexMath
 {
 	namespace e = Expo;
 	namespace l = Logarithm;
-    namespace g = General;
+	namespace g = General;
 
 	real arg(cmplx z)
-	{
-		return Special::atan2(z.imag(), z.real());
-	}
+	{ return Special::atan2(z.imag(), z.real()); }
 
 	cmplx complex_exp(cmplx z)
 	{
 		real a = z.real(), b = z.imag();
 		if (std::abs(b) < const_limits::LIM_EPS)
 			return e::exp(a);
-		
+
 		real exp_a = e::exp(a);
 		real sin_b = Trig::sin(b), cos_b = Trig::cos(b);
 
@@ -33,9 +31,7 @@ namespace ComplexMath
 	}
 
 	cmplx complex_log(cmplx z)
-	{
-		return cmplx(l::log(std::abs(z)), arg(z));
-	}
+	{ return cmplx(l::log(std::abs(z)), arg(z)); }
 
 	cmplx complex_sqrt(real x)
 	{
@@ -68,7 +64,7 @@ namespace ComplexMath
 	cmplx complex_square(cmplx z)
 	{
 		real a = z.real(), b = z.imag();
-		return cmplx(a*a - b*b, 2 * a * b);
+		return cmplx(a * a - b * b, 2 * a * b);
 	}
 
 	cmplx complex_sin(cmplx z)
@@ -88,9 +84,7 @@ namespace ComplexMath
 	}
 
 	cmplx complex_tan(cmplx z)
-	{
-		return complex_sin(z) / complex_cos(z);
-	}
+	{ return complex_sin(z) / complex_cos(z); }
 	cmplx complex_pow(cmplx z, cmplx w)
 	{
 		cmplx logz = complex_log(z);
@@ -123,9 +117,7 @@ namespace ComplexMath
 	}
 
 	cmplx complex_gamma(cmplx z)
-	{
-		return complex_exp(complex_log_gamma(z));
-	}
+	{ return complex_exp(complex_log_gamma(z)); }
 
 	cmplx eta(cmplx s)
 	{

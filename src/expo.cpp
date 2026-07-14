@@ -44,7 +44,8 @@ namespace Expo
 				break;
 		}
 
-		return st0 ? 1.0 / General::ldexp(sum, k) : General::ldexp(sum, k);
+		return st0 ? 1.0 / General::ldexp(sum, k)
+			   : General::ldexp(sum, k);
 	}
 
 	real exp(real x)
@@ -69,16 +70,15 @@ namespace Expo
 		real r = x - k * constants::LOG2;
 
 		real p =
-		    r * (r * (r * (r * (r * (r * (r * (
-				2.50726499359848e-5 * r +
-				0.00020097762801442) +
-	     	    0.00138880322459888) +
-			    0.00833259882407862) +
-				0.0416666766759372) +
-				0.166666737586158) +
-			    0.499999999636699) +
-			    0.999999998355752) +
-		    	1.00000000000182;
+		    r * (r * (r * (r * (r * (r * (r * (2.50726499359848e-5 * r +
+						       0.00020097762801442) +
+						  0.00138880322459888) +
+					     0.00833259882407862) +
+					0.0416666766759372) +
+				   0.166666737586158) +
+			      0.499999999636699) +
+			 0.999999998355752) +
+		    1.00000000000182;
 
 		return General::ldexp(p, k);
 	}
@@ -99,12 +99,8 @@ namespace Expo
 	}
 
 	real exp10(real x)
-	{
-		return exp(x * constants::LOG10);
-	}
+	{ return exp(x * constants::LOG10); }
 
 	real exp2(real x)
-	{
-		return exp(x * constants::LOG2);
-	}
+	{ return exp(x * constants::LOG2); }
 }; // namespace Expo

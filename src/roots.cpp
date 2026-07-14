@@ -8,7 +8,6 @@
 #include "../include/lookup/sqrt_table.hpp"
 #include "../include/rootfinding.hpp"
 
-
 namespace Roots
 {
 	namespace e = Expo;

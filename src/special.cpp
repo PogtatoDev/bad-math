@@ -1,20 +1,20 @@
 #include "../include/special.hpp"
 
-#include "../include/constants.hpp"
 #include "../include/calculus.hpp"
+#include "../include/constants.hpp"
 #include "../include/expo.hpp"
+#include "../include/invtrig.hpp"
 #include "../include/logarithm.hpp"
 #include "../include/powers.hpp"
-#include "../include/trig.hpp"
-#include "../include/invtrig.hpp"
 #include "../include/rootfinding.hpp"
 #include "../include/roots.hpp"
+#include "../include/trig.hpp"
 
 namespace Special
 {
 	namespace e = Expo;
-    namespace g = General;
-    namespace l = Logarithm;
+	namespace g = General;
+	namespace l = Logarithm;
 
 	real harmonic(real n)
 	{
@@ -24,9 +24,8 @@ namespace Special
 			return 1.5;
 		real n2 = n * n;
 		real n4 = n2 * n2;
-		return l::log(n) + constants::GAMMA +
-		       1.0 / (2.0 * n) - 1.0 / (12.0 * n2) +
-		       1.0 / (120.0 * n4);
+		return l::log(n) + constants::GAMMA + 1.0 / (2.0 * n) -
+		       1.0 / (12.0 * n2) + 1.0 / (120.0 * n4);
 	}
 
 	namespace DirichletSeries
@@ -107,8 +106,8 @@ namespace Special
 			if (General::is_int(x) && x < 20)
 			{
 				int n = static_cast<int>(std::round(x));
-				
-				return l::log(General::factorial(n-1));
+
+				return l::log(General::factorial(n - 1));
 			}
 
 			real c = 0.5 * (constants::LOG2 + constants::LOGPI);
@@ -135,14 +134,10 @@ namespace Special
 	}
 
 	real gamma(real s)
-	{
-		return e::exp(log_gamma(s));
-	}
+	{ return e::exp(log_gamma(s)); }
 
 	real beta(real x, real y)
-	{
-		return (gamma(x) * gamma(y)) / gamma(x + y);
-	}
+	{ return (gamma(x) * gamma(y)) / gamma(x + y); }
 
 	real lamb_w(real x)
 	{
@@ -205,7 +200,6 @@ namespace Special
 		real xy = x - y;
 		return (x + y + Roots::sqrt(xy * xy + bias)) / 2.0;
 	}
-
 
 	real smin(real x, real y, real bias)
 	{

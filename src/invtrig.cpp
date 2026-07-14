@@ -2,10 +2,9 @@
 
 #include "../include/constants.hpp"
 #include "../include/rootfinding.hpp"
-#include "../include/trig.hpp"
 #include "../include/roots.hpp"
+#include "../include/trig.hpp"
 #include <limits>
-
 
 namespace InvTrig
 {
@@ -25,9 +24,7 @@ namespace InvTrig
 	}
 
 	real acos(real x)
-	{
-		return (constants::PI_2) - asin(x);
-	}
+	{ return (constants::PI_2)-asin(x); }
 
 	real atan(real x)
 	{
@@ -37,15 +34,15 @@ namespace InvTrig
 
 		bool st1 = (x < -1);
 		bool bt1 = (x > 1);
-		
+
 		if (std::abs(x) < const_limits::LIM_EPS)
-    		return 0;
+			return 0;
 
 		if (bt1 || st1)
 			x = 1.0 / x;
 
-		real x2 = x*x;
-		real p = ((A*x2 + B)*x2 + C)*x;
+		real x2 = x * x;
+		real p = ((A * x2 + B) * x2 + C) * x;
 
 		if (bt1)
 			return constants::PI_2 - p;
@@ -55,17 +52,11 @@ namespace InvTrig
 	}
 
 	real asec(real x)
-	{
-		return acos(1.0 / x);
-	}
+	{ return acos(1.0 / x); }
 	real acsc(real x)
-	{
-		return asin(1.0 / x);
-	}
+	{ return asin(1.0 / x); }
 	real acot(real x)
-	{
-		return atan(1.0 / x);
-	}
+	{ return atan(1.0 / x); }
 
 	real fast_asin(real x)
 	{
@@ -77,7 +68,7 @@ namespace InvTrig
 
 		if (x == -1)
 			return -constants::PI_2;
-		
-		return atan(x / Roots::sqrt(1 - x*x));
+
+		return atan(x / Roots::sqrt(1 - x * x));
 	}
 }; // namespace InvTrig

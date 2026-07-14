@@ -1,25 +1,18 @@
 #include "../include/general.hpp"
 
-#include <cmath>
 #include <bit>
 #include <cstdint>
 
 namespace General
 {
 	real identity(real x)
-	{
-		return x;
-	}
+	{ return x; }
 
 	real square(real x)
-	{
-		return x * x;
-	}
+	{ return x * x; }
 
 	real cube(real x)
-	{
-		return x * x * x;
-	}
+	{ return x * x * x; }
 
 	real factorial(int n)
 	{
@@ -65,9 +58,9 @@ namespace General
 		else if (n < 0)
 			return 1.0 / int_pow(x, -n);
 		else if (is_even(n))
-			return int_pow(x*x, n / 2);
+			return int_pow(x * x, n / 2);
 		else
-			return x * int_pow(x*x, (n - 1) / 2);
+			return x * int_pow(x * x, (n - 1) / 2);
 	}
 
 	real exp2(int n)
@@ -113,7 +106,7 @@ namespace General
 		{
 			real d;
 			uint64_t u;
-		} v{ x };
+		} v{x};
 
 		uint64_t k = (v.u >> 52) & 0x7FF;
 
@@ -138,11 +131,10 @@ namespace General
 
 		return v.d;
 	}
-	
 
 	real max(real x, real y)
 	{
-		if (x > y) 
+		if (x > y)
 			return x;
 		else
 			return y;
@@ -150,14 +142,12 @@ namespace General
 
 	real min(real x, real y)
 	{
-		if (x < y) 
+		if (x < y)
 			return x;
 		else
 			return y;
 	}
 
 	bool tol(real x, real eps)
-	{
-		return (std::abs(x) < eps);
-	}
+	{ return (std::abs(x) < eps); }
 }; // namespace General
