@@ -51,7 +51,7 @@ namespace General
 
 	bool is_int(real x)
 	{
-		if (tol(x - round(x)))
+		if (std::abs(x - round(x)) < const_limits::LIM_EPS)
 			return true;
 		return false;
 	}
@@ -158,6 +158,6 @@ namespace General
 
 	bool tol(real x, real eps)
 	{
-		return (abs(x) < eps);
+		return (std::abs(x) < eps);
 	}
 }; // namespace General

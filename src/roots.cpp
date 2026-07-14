@@ -52,7 +52,7 @@ namespace Roots
 	{
 		if (General::is_even(n) && x < 0)
 			return std::numeric_limits<real>::quiet_NaN();
-		if (General::tol(x))
+		if (std::abs(x) < const_limits::LIM_EPS)
 			return 0;
 		double guess = General::exp2(General::log2_int(x) / n);
 		auto f = [x, n](real t) { return General::int_pow(t, n) - x; };

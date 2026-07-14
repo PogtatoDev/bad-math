@@ -38,7 +38,7 @@ namespace InvTrig
 		bool st1 = (x < -1);
 		bool bt1 = (x > 1);
 		
-		if (General::tol(x))
+		if (std::abs(x) < const_limits::LIM_EPS)
     		return 0;
 
 		if (bt1 || st1)

@@ -10,7 +10,7 @@ namespace RootFinding
 	real manual_newton(Func f, dFunc Df, real guess,
 			   real eps = const_limits::LIM_EPS, int term_cap = 500)
 	{
-		if (General::tol(Df(guess)))
+		if (std::abs(Df(guess)) < const_limits::LIM_EPS)
 			return std::numeric_limits<real>::quiet_NaN();
 
 		real next, old = 0;

@@ -23,7 +23,7 @@ namespace ComplexMath
 	cmplx complex_exp(cmplx z)
 	{
 		real a = z.real(), b = z.imag();
-		if (General::tol(b))
+		if (std::abs(b) < const_limits::LIM_EPS)
 			return e::exp(a);
 		
 		real exp_a = e::exp(a);
@@ -41,13 +41,13 @@ namespace ComplexMath
 	{
 		if (x < 0)
 			return cmplx(0, Roots::sqrt(-x));
-		else
-			return Roots::sqrt(x);
+
+		return Roots::sqrt(x);
 	}
 
 	void solve_quadratic(real a, real b, real c, cmplx solutions[2])
 	{
-		if (General::tol(a))
+		if (std::abs(a) < const_limits::LIM_EPS)
 		{
 			solutions[0] = std::numeric_limits<real>::quiet_NaN();
 			solutions[1] = std::numeric_limits<real>::quiet_NaN();
@@ -100,7 +100,7 @@ namespace ComplexMath
 
 	cmplx complex_log_gamma(cmplx z)
 	{
-		if (g::tol(z.imag()))
+		if (std::abs(z.imag()) < const_limits::LIM_EPS)
 			return Special::log_gamma(z.real());
 
 		if (z.real() > 1)

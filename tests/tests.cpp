@@ -1,11 +1,12 @@
 #include "../include/linear.hpp"
 #include "../include/quadratic.hpp"
-#include <chrono>
 #include "../include/roots.hpp"
+#include <chrono>
 #include <cmath>
 #include <complex>
 #include <iostream>
 #include <ostream>
+
 
 class Benchmark
 {
@@ -170,10 +171,20 @@ void test_linear()
 		  << "    x = " << solve_linear(l1, l2) << std::endl;
 }
 
-int main()
-{
-	for (int i = 1; i < 32; i++)
-	{
-		std::cout << Roots::sqrt(i) << " -- √(" << i << ")" << std::endl; 
+int main() {
+	while (true) {
+		std::string str;
+		std::cout << "enter number: ";
+		std::cin >> str;
+
+		if (str == "exit")
+			break;
+
+		char* ptr;
+		double num = strtod(str.c_str(), &ptr);
+
+		std::cout << "sqrt(" << num << ") = " << std::sqrt(num) << "\n";
 	}
+
+	return 0;
 }

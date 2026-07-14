@@ -2,3 +2,5 @@
 ./tests/
 shabang.bat
 out.txt
+.vscode
+.idea

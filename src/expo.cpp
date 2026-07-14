@@ -53,7 +53,7 @@ namespace Expo
 			return 0;
 		if (x > 710)
 			return std::numeric_limits<real>::infinity();
-		if (x != x)
+		if (std::isnan(x))
 			return x;
 
 		if (General::is_int(x) && std::abs(x) < 710)
@@ -65,7 +65,7 @@ namespace Expo
 		if (x < 0)
 			return 1.0 / exp(-x);
 
-		int k = round(x * constants::INV_LOG2);
+		int k = std::round(x * constants::INV_LOG2);
 		real r = x - k * constants::LOG2;
 
 		real p =
