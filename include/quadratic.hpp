@@ -10,9 +10,7 @@ struct Quadratic
 
       public:
 	real evaluate_at(real x);
-	real a;
-	real b;
-	real c;
+	real a, b, c;
 	cmplx roots[2];
 
 	Vector2<real> vertex();
@@ -27,11 +25,10 @@ struct Quadratic
 		init_solutions();
 	}
 
-    Quadratic& operator+=(const Quadratic &quad);
-	Quadratic& operator-=(const Quadratic &quad);
-	Quadratic operator+(const Quadratic &quad);
-	Quadratic operator-(const Quadratic &quad);
-
+    Quadratic& operator += (const Quadratic &quad);
+	Quadratic& operator -= (const Quadratic &quad);
+	Quadratic operator + (const Quadratic &quad);
+	Quadratic operator - (const Quadratic &quad);
 
     std::string display();
 };

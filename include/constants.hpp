@@ -70,12 +70,12 @@ namespace constants
 				      20922789888000,
 				      355687428096000,
 				      6402373705728000,
-				      121645100408832000,
-				      2432902008176640000};
+				      121645100408832000.0,
+				      2432902008176640000.0};
 } // namespace constants
 
 namespace const_limits
 {
-	constexpr int LIM_INF = 1e7;
-	constexpr real LIM_EPS = 1e-11;
+	constexpr int LIM_INF = 1e9;
+	constexpr real LIM_EPS = 1e-9;
 } // namespace const_limits

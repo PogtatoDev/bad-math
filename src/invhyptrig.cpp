@@ -18,7 +18,6 @@ namespace InvHypTrig
 		const real t = (1 + x) / (1 - x);
 		return 0.5 * Logarithm::log(t);
 	}
-
 	real asech(real x)
 	{ return acosh(1.0 / x); }
 	real acsch(real x)

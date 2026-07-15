@@ -1,6 +1,6 @@
 Language: Cpp
 
-TabWidth: 8
+TabWidth: 4
 IndentWidth: 8
 UseTab: Always
 

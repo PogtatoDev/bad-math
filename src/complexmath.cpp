@@ -64,7 +64,7 @@ namespace ComplexMath
 	cmplx complex_square(cmplx z)
 	{
 		real a = z.real(), b = z.imag();
-		return cmplx(a * a - b * b, 2 * a * b);
+		return cmplx((a * a) - (b * b), 2 * a * b);
 	}
 
 	cmplx complex_sin(cmplx z)

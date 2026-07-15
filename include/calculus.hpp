@@ -74,7 +74,7 @@ namespace Calculus
 	}
 
 	template <typename Func>
-	real rect_riemann_sum(Func f, real start, real end, int n)
+	real riemann_sum(Func f, real start, real end, int n)
 	{
 		const real dx = (end - start) / n;
 		real approx = 0;

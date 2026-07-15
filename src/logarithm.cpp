@@ -127,6 +127,7 @@ namespace Logarithm
 		return RootFinding::manual_newton(f, Df, guess);
 	}
 
+
 	real log_base(real x, real base)
 	{ return Logarithm::log(x) / log(base); }
 

@@ -12,7 +12,6 @@ namespace Expo
 {
 	real alt_exp(real x)
 	{
-		bool st0 = false;
 		if (x < -710)
 			return 0;
 		if (x > 710)
@@ -26,8 +25,7 @@ namespace Expo
 			return exp_table[n + 710];
 		}
 
-		if (x < 0)
-			st0 = true;
+		bool st0 = x < 0;
 
 		int k = std::floor(x / constants::LOG2);
 		real r = x - (k * constants::LOG2);
@@ -54,6 +52,8 @@ namespace Expo
 			return 0;
 		if (x > 710)
 			return std::numeric_limits<real>::infinity();
+
+		bool st0 = x < 0;
 		if (std::isnan(x))
 			return x;
 
@@ -70,17 +70,18 @@ namespace Expo
 		real r = x - k * constants::LOG2;
 
 		real p =
-		    r * (r * (r * (r * (r * (r * (r * (2.50726499359848e-5 * r +
-						       0.00020097762801442) +
-						  0.00138880322459888) +
-					     0.00833259882407862) +
-					0.0416666766759372) +
-				   0.166666737586158) +
-			      0.499999999636699) +
-			 0.999999998355752) +
+		    r * (r * (r * (r * (r * (r * (r * (
+		    2.50726499359848e-5 * r +
+		    0.00020097762801442) +
+		    0.00138880322459888) +
+		    0.00833259882407862) +
+		    0.0416666766759372) +
+		    0.166666737586158) +
+		    0.499999999636699) +
+		    0.999999998355752) +
 		    1.00000000000182;
 
-		return General::ldexp(p, k);
+		return st0 ? 1.0 / General::ldexp(p, k) : General::ldexp(p, k);
 	}
 
 	real fast_exp(real x)

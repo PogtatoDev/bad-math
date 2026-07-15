@@ -64,9 +64,8 @@ namespace NumberTheory
 		{
 			k++;
 			if (is_prime(k))
-			{
 				count++;
-			}
+
 		}
 		return k;
 	}

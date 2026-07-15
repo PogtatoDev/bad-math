@@ -1,12 +1,15 @@
+#include "../include/invhyptrig.hpp"
 #include "../include/linear.hpp"
 #include "../include/quadratic.hpp"
 #include "../include/roots.hpp"
+#include "../include/special.hpp"
+
 #include <chrono>
 #include <cmath>
 #include <complex>
 #include <iostream>
 #include <ostream>
-
+#include <vector>
 
 class Benchmark
 {
@@ -43,41 +46,41 @@ Benchmark bench(Func1 func1, Func2 func2, real start, real end, real increment)
 {
 	real sink = 0;
 	Timer t;
-
+	std::cout << "- computing absolute error..." << std::endl;
 	for (real i = start; i < end; i += increment)
-	{
 		sink += std::abs(func1(i) - func2(i));
-	}
 
+	std::cout << "absolute error finished!" << std::endl << std::endl;
 	Benchmark temp;
 	temp.sink = sink;
 	temp.full_time = t.elapsed();
 	sink = 0;
+	std::cout << "- computing relative error..." << std::endl;
 	for (real i = start; i < end; i += increment)
-	{
-
 		sink += std::abs(func1(i) - func2(i)) / func1(i);
-	}
+
 	temp.ehhhror = sink;
+	std::cout << "relative error finished!" << std::endl << std::endl;
 	t.reset();
 	sink = 0;
+	std::cout << "- computing func1 sink..." << std::endl;
 	for (real i = start; i < end; i += increment)
-	{
 		sink += func1(i);
-	}
-
+	std::cout << "func1 sink finished!" << std::endl << std::endl;
+	std::cout << "- computing func2 sink..." << std::endl;
 	temp.func1_sink = sink;
 	temp.func1_time = t.elapsed();
 
 	t.reset();
 	sink = 0;
 	for (real i = start; i < end; i += increment)
-	{
 		sink += func2(i);
-	}
 
+	std::cout << "func2 sink finished!" << std::endl << std::endl;
 	temp.func2_sink = sink;
 	temp.func2_time = t.elapsed();
+
+	std::system("clear");
 
 	return temp;
 }
@@ -85,41 +88,60 @@ Benchmark bench(Func1 func1, Func2 func2, real start, real end, real increment)
 template <typename Func1, typename Func2>
 void test(Func1 f1, std::string name1, Func2 f2, std::string name2)
 {
-	const real start = 1;
-	const real end = 1e7;
-	const real increment = 1;
+	real start;
+	real end;
+	real increment;
+	std::vector<real> special_values;
+	real temp;
+	std::cout << "start at: ";
+	std::cin >> start;
+	std::cout << "end at: ";
+	std::cin >> end;
+	std::cout << "increment of: ";
+	std::cin >> increment;
+	std::cout << "special values: ";
+
+	std::cin.ignore();
+	std::string line;
+	std::getline(std::cin, line);
+	std::stringstream ss(line);
+	while (ss >> temp) {
+		special_values.push_back(temp);
+	}
+
+	std::system("clear");
+	std::cout << "running tests..." << std::endl;
 	Benchmark tests = bench(f1, f2, start, end, increment);
 
 	std::cout << "test results for " << name1 << " (func1) vs " << name2
 		  << " (func2) from " << start << " to " << end
 		  << " with increment " << increment << std::endl
-		  << "	full time taken:                  " << tests.full_time
+		  << "	full time taken: " << tests.full_time
 		  << std::endl
-		  << "	shitty error:                     " << tests.sink
+		  << "	absolute error error: " << tests.sink
 		  << std::endl
-		  << "	good error:                       " << tests.ehhhror
+		  << "	relative error: " << tests.ehhhror
 		  << std::endl
-		  << "	func 1 time taken:                " << tests.func1_time
+		  << "	func 1 time taken: " << tests.func1_time
 		  << std::endl
-		  << "	func 2 time taken:                " << tests.func2_time
+		  << "	func 2 time taken: " << tests.func2_time
 		  << std::endl
-		  << "	func 1 sink:                      " << tests.func1_sink
+		  << "	func 1 sink: " << tests.func1_sink
 		  << std::endl
-		  << "	func 2 sink:                      " << tests.func2_sink
-		  << std::endl
-		  << "	func 1 evaluated at " << end << ":        " << f1(end)
-		  << std::endl
-		  << "	func 2 evaluated at " << end << ":        " << f2(end)
-		  << std::endl
-		  << "	func 1 evaluated at " << start << ":            "
-		  << f1(start) << std::endl
-		  << "	func 2 evaluated at " << start << ":            "
-		  << f2(start) << std::endl;
+		  << "	func 2 sink: " << tests.func2_sink
+		  << std::endl << std::endl
+		  << "special values: " << std::endl;
+
+	for (const real& i : special_values)
+	{
+		std::cout << "	func 1 evaluated at " << i << ": " << f1(i) << std::endl;
+		std::cout << "	func 2 evaluated at " << i << ": " << f2(i) << std::endl;
+	}
+
 }
 
 void test_quadratic()
 {
-
 	Quadratic quad1(5, 4, 2);
 	Quadratic quad2(0.4, 9, -10);
 
@@ -172,19 +194,9 @@ void test_linear()
 }
 
 int main() {
-	while (true) {
-		std::string str;
-		std::cout << "enter number: ";
-		std::cin >> str;
+	auto f1 = [](real t){ return Special::log_gamma(t); };
+	auto f2 = [](real t) { return std::lgamma(t); };
 
-		if (str == "exit")
-			break;
-
-		char* ptr;
-		double num = strtod(str.c_str(), &ptr);
-
-		std::cout << "sqrt(" << num << ") = " << std::sqrt(num) << "\n";
-	}
-
+	test(f1, "custom gamma", f2, "libm gamma");
 	return 0;
 }

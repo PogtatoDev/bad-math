@@ -53,14 +53,14 @@ namespace General
 	{
 		if (n == 0)
 			return 1;
-		else if (n == 1)
+		if (n == 1)
 			return x;
-		else if (n < 0)
+		if (n < 0)
 			return 1.0 / int_pow(x, -n);
-		else if (is_even(n))
+		if (is_even(n))
 			return int_pow(x * x, n / 2);
-		else
-			return x * int_pow(x * x, (n - 1) / 2);
+
+		return x * int_pow(x * x, (n - 1) / 2);
 	}
 
 	real exp2(int n)
@@ -136,16 +136,14 @@ namespace General
 	{
 		if (x > y)
 			return x;
-		else
-			return y;
+		return y;
 	}
 
 	real min(real x, real y)
 	{
 		if (x < y)
 			return x;
-		else
-			return y;
+		return y;
 	}
 
 	bool tol(real x, real eps)

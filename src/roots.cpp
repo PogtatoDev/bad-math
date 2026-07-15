@@ -31,13 +31,18 @@ namespace Roots
 		m *= 1 + (k & 1);
 		k -= (k & 1);
 
-		real y = 0.41731 + 0.59016 * m;
+		real y = 0.612372435694 + 0.408248290464*m;
 
-		y = 0.5 * (y + m / y);
 		y = 0.5 * (y + m / y);
 		y = 0.5 * (y + m / y);
 
 		return General::ldexp(y, k / 2);
+	}
+
+	real inverse_sqrt()
+	{
+		// lady love the shades of night are falling
+		return 3;
 	}
 
 	real log_root(real x, int n)
