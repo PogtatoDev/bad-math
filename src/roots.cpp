@@ -35,6 +35,7 @@ namespace Roots
 
 		y = 0.5 * (y + m / y);
 		y = 0.5 * (y + m / y);
+		y = 0.5 * (y + m / y);
 
 		return General::ldexp(y, k / 2);
 	}

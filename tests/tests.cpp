@@ -1,5 +1,6 @@
 #include "../include/invhyptrig.hpp"
 #include "../include/linear.hpp"
+#include "../include/logarithm.hpp"
 #include "../include/quadratic.hpp"
 #include "../include/roots.hpp"
 #include "../include/special.hpp"
@@ -118,7 +119,7 @@ void test(Func1 f1, std::string name1, Func2 f2, std::string name2)
 		  << " with increment " << increment << std::endl
 		  << "	full time taken: " << tests.full_time
 		  << std::endl
-		  << "	absolute error error: " << tests.sink
+		  << "	absolute error: " << tests.sink
 		  << std::endl
 		  << "	relative error: " << tests.ehhhror
 		  << std::endl
@@ -194,9 +195,9 @@ void test_linear()
 }
 
 int main() {
-	auto f1 = [](real t){ return Special::log_gamma(t); };
-	auto f2 = [](real t) { return std::lgamma(t); };
+	auto f1 = [](real t){ return Roots::sqrt(t); };
+	auto f2 = [](real t) { return std::sqrt(t); };
 
-	test(f1, "custom gamma", f2, "libm gamma");
+	test(f1, "custom sqrt", f2, "libm sqrt");
 	return 0;
 }
